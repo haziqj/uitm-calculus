@@ -1,5 +1,6 @@
 project:
   title: "uitm-calculus"
+  output-dir: docs/
 
 
 
