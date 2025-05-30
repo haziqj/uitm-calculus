@@ -3,6 +3,7 @@ title: 'Calculus: Differentiation and Its Application'
 subtitle: A statistical perspective
 format:
   ubd40-revealjs:
+    slide-level: 2
     transition: fade
     auto-stretch: false
     width: 1250  # 1050
@@ -29,19 +30,267 @@ execute:
   cache: false
 ---
 
+## (Almost) Everything you ought to know...
+
+### ...about calculus in the first year
+
+
+
+Let $f:\mathcal X \to \mathbb R$ be a *real-valued* function defined on an input set $\mathcal X$.
+
+::: {.fragment}
+
+::: {#def-derivatives}
+
+#### Differentiability
+
+$f(x)$ is said to be *differentiable* at a point $x \in \mathcal X$ if the limit 
+
+$$
+L = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
+$${#eq-def-derivative}
+exists.
+If $L$ exists, we denote it by $f'(x)$ or $\frac{df}{dx}(x)$, and call it the *derivative* of $f$ at $x$.
+Further, $f$ is said to be differentiable on $\mathcal X$ if it is differentiable at every point in $\mathcal X$.
+:::
+
+:::
+
+::: {.fragment}
+For now, we assume $\mathcal X \subseteq \mathbb R$, and will extend to higher dimensions later.
+:::
+
+## Some examples
+
+
+::: {.columns}
+
+::: {.column width="50%"}
+<br>
+
+| Function | Derivative |
+| --- | --- |
+| $f(x) = x^2$ | $f'(x) = 2x$ |
+| $f(x) = \sum_{n} a_n x^n$ | $f'(x) = \sum_{n} n a_n x^{n-1}$ | 
+| $f(x) = \sin(x)$ | $f'(x) = \cos(x)$ |
+| $f(x) = \cos(x)$ | $f'(x) = -\sin(x)$ |
+| $f(x) = e^x$ | $f'(x) = e^x$ |
+| $f(x) = \ln(x)$ | $f'(x) = \frac{1}{x}$ | 
+| | |
+: {.table-ubd}
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="45%"}
+
+<br>
+
+We can derive it "by hand" using the definition.
+Let $f(x) = x^2$.
+Then,
+
+<br>
+<br>
+
+$$
+\begin{align}
+\lim_{h \to 0} & \frac{f(x + h) - f(x)}{h} \\
+&= \lim_{h \to 0} \frac{(x + h)^2 - x^2}{h} \\
+&= \lim_{h \to 0} \frac{x^2 + 2xh + h^2 - x^2}{h} \\[0.5em]
+&= \lim_{h \to 0} 2x + h \\[0.5em]
+&= 2x.
+\end{align}
+$$
+
+:::
+
+:::
+
+::: aside
+[Taylor series](https://en.wikipedia.org/wiki/Taylor_series) is a powerful tool for approximating functions using derivatives. 
+:::
+
+
+## Graphically...
+
+```{=html}
+<script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
+<div id="desmos-derivative" style="position: relative; width: 100%; height:88%;"></div>
+
+<script>
+  const elt = document.getElementById("desmos-derivative");
+  const calculator = Desmos.GraphingCalculator(elt, {
+    expressions: true,
+    settingsMenu: false,
+    zoomButtons: true
+  });
+
+  calculator.setExpressions([
+    { id: 'f', latex: 'f(x) = x^2' },
+    { id: 'a', latex: 'a = 1', sliderBounds: { min: -1, max: 3 } },
+    { id: 'h', latex: 'h = 1.5', sliderBounds: { min: 0.001, max: 1.5 } },
+    { id: 'pt1', latex: '(a, f(a))', showLabel: true },
+    { id: 'pt2', latex: '(a + h, f(a + h))', showLabel: true },
+    { id: 's', latex: 'L = \\frac{f(a+h) - f(a)}{h}' },
+    { id: 'tangent', latex: 'y = L(x - a) + f(a)', color: Desmos.Colors.RED }
+  ]);
+  
+  calculator.setMathBounds({
+    left: -1,
+    right: 3,
+    bottom: -0.5,
+    top: 8
+  });
+
+</script>
+```
+
+## What is a derivative?
+
+The derivative of a function tells you:    
+
+- 🚀 How fast the function is _changing_ at any point  
+- 📐 The **slope** of the tangent line at that point
+
+```{r}
+#| fig-height: 2.8
+#| fig-width: 7
+#| out-width: 100%
+library(tidyverse)
+
+f <- function(x) -x^2
+f_prime <- function(x) -2*x
+x_pts <- c(-1, 0, 1)
+fty <- factor(c("f increasing", "f stationary", "f decreasing"),
+                levels = c("f increasing", "f stationary", "f decreasing"))
+
+curve_df <- tibble(x = seq(-2, 2, length.out = 200), y = f(x))
+
+tangent_df <- lapply(x_pts, function(a) {
+  tibble(x = seq(a - 1, a + 1, length.out = 100),
+         y = f_prime(a) * x + f(a) - f_prime(a) * a,
+         x0 = a,
+         type = fty[match(a, x_pts)])
+}) |> bind_rows()
+
+point_df <- tibble(x = x_pts, y = f(x_pts), type = fty)
+
+ggplot() +
+  geom_line(data = curve_df, aes(x, y), color = "black", linewidth = 0.8) +
+  geom_line(data = tangent_df, aes(x, y), color = "red3", linewidth = 0.8) +
+  geom_point(data = point_df, aes(x, y), color = "steelblue3", size = 2) +
+  facet_wrap(~ type) +
+  labs(x = "x", y = "f(x)") +
+  theme_bw()
+```
+
+## The concept of optimisation
+
+- When $f$ is some kind of a "reward" function, then the value of $x$ that maximises $f$ is highly of interest.
+
+- Derivatives help us find maxima (or minima): Solve $f'(x) = 0$.
+
+- Example: Find the maximum of $f(x) = -3x^4 + 4x^3 + 12x^2$.
+
+## Graphically...
+
+```{r}
+#| fig-height: 4.1
+#| fig-width: 7
+#| out-width: 100%
+library(ggrepel)
+
+f <- function(x) -3 * x ^ 4 + 4 * x ^ 3 + 12 * x ^ 2#-x^4 + 2*x^3 + 3*x^2 - 2*x
+x_crit <- c(-1, 0, 2)
+df <- tibble(x = seq(-2, 3, length.out = 500)) %>%
+  mutate(y = f(x))
+
+critical_points <- tibble(
+  x = x_crit,
+  label = c("Local Max", "Local Min", "Global Max"),
+  color = RColorBrewer::brewer.pal(3, "Set1")
+) %>%
+  mutate(y = f(x))
+
+shade_df <- tibble(
+  xmin = c(-Inf, x_crit[1], x_crit[2]),
+  xmax = c(x_crit[1], x_crit[2], x_crit[3]),
+  fill = rep(c("grey75", "white"), length.out = 3)
+)
+
+pm_df <- tibble(
+  x = ((c(-2.2, x_crit, 3.2) + c(x_crit, 3.2, 0)) / 2)[1:4],
+  y = 35
+)
+
+ggplot(df, aes(x, y)) +
+  geom_rect(data = shade_df, aes(xmin = xmin, xmax = xmax, ymin = -Inf, 
+                                 ymax = Inf, fill = fill), 
+            inherit.aes = FALSE, alpha = 0.4) +  
+  scale_fill_identity() +
+  geom_label(data = pm_df, aes(x, y, label = c("+", "−", "+", "−")),
+            size = 8, color = "black", vjust = -0.5) +
+  geom_line(color = "black", size = 1) +
+  geom_point(data = critical_points, aes(x, y, color = label), size = 3,
+             show.legend = FALSE) +
+  geom_text_repel(
+    data = critical_points, 
+    aes(x, y, label = label, color = label), 
+    size = 4.5, 
+    seed = 4, 
+    #nudge_y = 0.5,
+    box.padding = 1, 
+    point.padding = 0.4, 
+    show.legend = FALSE
+  ) +
+  scale_colour_brewer(palette = "Set1") +
+  coord_cartesian(ylim = c(-8, 43)) +
+  labs(x = "x", y = "f(x)") +
+  theme_bw()
+```
+
+
+## How do we know if it's a maxima or minima?
+
+Second derivative test: Measure the **change in slope** around the critical point $\hat x$, i.e. $f''(\hat x) = \frac{d}{dx}\left( \frac{df}{dx}(x) \right)$.
+
+
+
+| Behaviour of $f$ near $\hat x$               | $f''(\hat x)$       | Shape             | Conclusion     |
+|-------------------------------|---------------------|----------------------|-------------------|----------------|
+| Increasing → Decreasing       | $f''(\hat x) < 0$ | Concave (∩)  | Local maximum  |
+| Decreasing → Increasing       | $f''(\hat x) > 0$ | Convex (∪)    | Local minimum  |
+| No sign change / flat region  |  $f''(\hat x) = 0$   | Unknown / flat    | Inconclusive   |
+
+
+## Uses of calculus in everyday life
+
+1. **Physics**: Calculating velocity and acceleration from position functions.
+2. **Economics**: Finding marginal cost and revenue functions.
+3. **Engineering**: Optimizing designs for strength and efficiency.
+4. **Biology**: Modeling population growth rates.
+5. **Finance**: Analyzing risk and return in investment portfolios.
+
+
+
+## Motivation
+
+Show students how theoretical tools they’re learning now are used to derive estimators;
+
+
+Plant the idea that Statistics isn’t just “data” or “Excel”, but has real mathematical depth;
+Give a clear reason to care about derivatives, gradients, Hessians, and Jacobians in practice.
+
 ## Functions
 
 
 
 ## Derivatives
 
-::: {#def-derivatives}
 
-#### Derivatives
-
-Hello
-
-:::
 
 ## Derivatives
 
@@ -84,3 +333,9 @@ Show why Jacobians matter when transforming distributions.
 	•	Example: bivariate normal to standard normal → Cholesky or whitening
 
 Application: Why this matters in simulations and Bayesian inference (brief mention of Metropolis-Hastings, normalizing flows, etc.)
+
+## Conclusions
+
+- Calculus is not just background math—it’s the **engine** of statistical theory.
+- Beyond undergraduate stats: everything from MLE, Bayesian posteriors, to machine learning involves gradients and Hessians.
+ Suggest: for students who love math but unsure about statistics—you are the kind of person statistics needs.

@@ -19,6 +19,7 @@ $ubddarkgrey: #404041;
 
 // Colour text
 
+
 .ubdblue {
   color: $ubdblue;
 }
@@ -628,4 +629,28 @@ div.quarto-figure.quarto-figure-center {
 
 .nudge-down-medium {
   transform: translateY(37.5px);
+}
+
+/* Style the theorem class like a callout */
+.theorem.definition {
+  border: 0.5px solid $ubdgrey;
+  border-left: 5px solid $ubdrubydeep; /* Warning yellow/orange */
+  background-color: #fff;      /* Soft highlight */
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 5px;
+  box-shadow: 0 0 0 1px #eee;
+}
+
+.theorem.definition .theorem-title {
+  color: $ubdrubydeep;
+}
+
+.theorem.definition p:first-of-type {
+  margin-top: 0.1rem;
+  margin-bottom: 0;
+}
+
+.theorem p:last-of-type {
+  margin-bottom: 0;
 }

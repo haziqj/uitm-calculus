@@ -30,7 +30,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-ecb4733919c266443661e141e4560189.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-edd13c1579391a83333848cb2a8e4bfc.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -149,16 +149,223 @@ Dr.&nbsp;Haziq Jamil <a href="https://orcid.org/0000-0003-3298-1010" class="quar
 
   <p class="date">June 14, 2025</p>
 </section>
+<section id="almost-everything-you-ought-to-know" class="slide level2">
+<h2>(Almost) Everything you ought to know…</h2>
+<h3 id="about-calculus-in-the-first-year">…about calculus in the first year</h3>
+<p>Let <span class="math inline">\(f:\mathcal X \to \mathbb R\)</span> be a <em>real-valued</em> function defined on an input set <span class="math inline">\(\mathcal X\)</span>.</p>
+<div class="fragment">
+<div id="def-derivatives" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1 (Differentiability)</strong></span> <span class="math inline">\(f(x)\)</span> is said to be <em>differentiable</em> at a point <span class="math inline">\(x \in \mathcal X\)</span> if the limit</p>
+<p><span id="eq-def-derivative"><span class="math display">\[
+L = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
+\tag{1}\]</span></span> exists. If <span class="math inline">\(L\)</span> exists, we denote it by <span class="math inline">\(f'(x)\)</span> or <span class="math inline">\(\frac{df}{dx}(x)\)</span>, and call it the <em>derivative</em> of <span class="math inline">\(f\)</span> at <span class="math inline">\(x\)</span>. Further, <span class="math inline">\(f\)</span> is said to be differentiable on <span class="math inline">\(\mathcal X\)</span> if it is differentiable at every point in <span class="math inline">\(\mathcal X\)</span>.</p>
+</div>
+</div>
+<div class="fragment">
+<p>For now, we assume <span class="math inline">\(\mathcal X \subseteq \mathbb R\)</span>, and will extend to higher dimensions later.</p>
+</div>
+</section>
+<section id="some-examples" class="slide level2">
+<h2>Some examples</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><br></p>
+<table class="table-ubd caption-top">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Derivative</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(f(x) = x^2\)</span></td>
+<td><span class="math inline">\(f'(x) = 2x\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(f(x) = \sum_{n} a_n x^n\)</span></td>
+<td><span class="math inline">\(f'(x) = \sum_{n} n a_n x^{n-1}\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(f(x) = \sin(x)\)</span></td>
+<td><span class="math inline">\(f'(x) = \cos(x)\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(f(x) = \cos(x)\)</span></td>
+<td><span class="math inline">\(f'(x) = -\sin(x)\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(f(x) = e^x\)</span></td>
+<td><span class="math inline">\(f'(x) = e^x\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(f(x) = \ln(x)\)</span></td>
+<td><span class="math inline">\(f'(x) = \frac{1}{x}\)</span></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div><div class="column" style="width:5%;">
+
+</div><div class="column" style="width:45%;">
+<p><br></p>
+<p>We can derive it “by hand” using the definition. Let <span class="math inline">\(f(x) = x^2\)</span>. Then,</p>
+<p><br> <br></p>
+<p><span class="math display">\[
+\begin{align}
+\lim_{h \to 0} &amp; \frac{f(x + h) - f(x)}{h} \\
+&amp;= \lim_{h \to 0} \frac{(x + h)^2 - x^2}{h} \\
+&amp;= \lim_{h \to 0} \frac{x^2 + 2xh + h^2 - x^2}{h} \\[0.5em]
+&amp;= \lim_{h \to 0} 2x + h \\[0.5em]
+&amp;= 2x.
+\end{align}
+\]</span></p>
+</div></div>
+
+<aside><div>
+<p><a href="https://en.wikipedia.org/wiki/Taylor_series">Taylor series</a> is a powerful tool for approximating functions using derivatives.</p>
+</div></aside></section>
+<section id="graphically" class="slide level2">
+<h2>Graphically…</h2>
+<script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
+<div id="desmos-derivative" style="position: relative; width: 100%; height:88%;"></div>
+
+<script>
+  const elt = document.getElementById("desmos-derivative");
+  const calculator = Desmos.GraphingCalculator(elt, {
+    expressions: true,
+    settingsMenu: false,
+    zoomButtons: true
+  });
+
+  calculator.setExpressions([
+    { id: 'f', latex: 'f(x) = x^2' },
+    { id: 'a', latex: 'a = 1', sliderBounds: { min: -1, max: 3 } },
+    { id: 'h', latex: 'h = 1.5', sliderBounds: { min: 0.001, max: 1.5 } },
+    { id: 'pt1', latex: '(a, f(a))', showLabel: true },
+    { id: 'pt2', latex: '(a + h, f(a + h))', showLabel: true },
+    { id: 's', latex: 'L = \\frac{f(a+h) - f(a)}{h}' },
+    { id: 'tangent', latex: 'y = L(x - a) + f(a)', color: Desmos.Colors.RED }
+  ]);
+  
+  calculator.setMathBounds({
+    left: -1,
+    right: 3,
+    bottom: -0.5,
+    top: 8
+  });
+
+</script>
+</section>
+<section id="what-is-a-derivative" class="slide level2">
+<h2>What is a derivative?</h2>
+<p>The derivative of a function tells you:</p>
+<ul>
+<li>🚀 How fast the function is <em>changing</em> at any point<br>
+</li>
+<li>📐 The <strong>slope</strong> of the tangent line at that point</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-1-1.png" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-concept-of-optimisation" class="slide level2">
+<h2>The concept of optimisation</h2>
+<ul>
+<li><p>When <span class="math inline">\(f\)</span> is some kind of a “reward” function, then the value of <span class="math inline">\(x\)</span> that maximises <span class="math inline">\(f\)</span> is highly of interest.</p></li>
+<li><p>Derivatives help us find maxima (or minima): Solve <span class="math inline">\(f'(x) = 0\)</span>.</p></li>
+<li><p>Example: Find the maximum of <span class="math inline">\(f(x) = -3x^4 + 4x^3 + 12x^2\)</span>.</p></li>
+</ul>
+</section>
+<section id="graphically-1" class="slide level2">
+<h2>Graphically…</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-2-1.png" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="how-do-we-know-if-its-a-maxima-or-minima" class="slide level2">
+<h2>How do we know if it’s a maxima or minima?</h2>
+<p>Second derivative test: Measure the <strong>change in slope</strong> around the critical point <span class="math inline">\(\hat x\)</span>, i.e.&nbsp;<span class="math inline">\(f''(\hat x) = \frac{d}{dx}\left( \frac{df}{dx}(x) \right)\)</span>.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 19%">
+<col style="width: 20%">
+<col style="width: 17%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Behaviour of <span class="math inline">\(f\)</span> near <span class="math inline">\(\hat x\)</span></th>
+<th><span class="math inline">\(f''(\hat x)\)</span></th>
+<th>Shape</th>
+<th>Conclusion</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Increasing → Decreasing</td>
+<td><span class="math inline">\(f''(\hat x) &lt; 0\)</span></td>
+<td>Concave (∩)</td>
+<td>Local maximum</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Decreasing → Increasing</td>
+<td><span class="math inline">\(f''(\hat x) &gt; 0\)</span></td>
+<td>Convex (∪)</td>
+<td>Local minimum</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>No sign change / flat region</td>
+<td><span class="math inline">\(f''(\hat x) = 0\)</span></td>
+<td>Unknown / flat</td>
+<td>Inconclusive</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="uses-of-calculus-in-everyday-life" class="slide level2">
+<h2>Uses of calculus in everyday life</h2>
+<ol type="1">
+<li><strong>Physics</strong>: Calculating velocity and acceleration from position functions.</li>
+<li><strong>Economics</strong>: Finding marginal cost and revenue functions.</li>
+<li><strong>Engineering</strong>: Optimizing designs for strength and efficiency.</li>
+<li><strong>Biology</strong>: Modeling population growth rates.</li>
+<li><strong>Finance</strong>: Analyzing risk and return in investment portfolios.</li>
+</ol>
+</section>
+<section id="motivation" class="slide level2">
+<h2>Motivation</h2>
+<p>Show students how theoretical tools they’re learning now are used to derive estimators;</p>
+<p>Plant the idea that Statistics isn’t just “data” or “Excel”, but has real mathematical depth; Give a clear reason to care about derivatives, gradients, Hessians, and Jacobians in practice.</p>
+</section>
 <section id="functions" class="slide level2">
 <h2>Functions</h2>
 </section>
 <section id="derivatives" class="slide level2">
 <h2>Derivatives</h2>
-<div id="def-derivatives" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 1 (Derivatives)</strong></span> Hello</p>
-</div>
 </section>
-<section id="derivatives-2" class="slide level2">
+<section id="derivatives-1" class="slide level2">
 <h2>Derivatives</h2>
 <p>Goal: Shift mindset from high-school calculus to tools for optimization and multidimensional problems. • Quick recap: derivative as slope, second derivative as curvature • Extension to multivariable functions: • Partial derivatives • Gradient as direction of steepest ascent • Hessian as local curvature matrix • Applications in optimization: what it means to maximize or minimize a function with multiple variables</p>
 <p>Example: A simple multivariate function <span class="math inline">\(f(x, y) = -x^2 - y^2 + 4x + 6y\)</span>. Find its critical point using partial derivatives, use the Hessian to classify.</p>
@@ -189,6 +396,13 @@ Dr.&nbsp;Haziq Jamil <a href="https://orcid.org/0000-0003-3298-1010" class="quar
 <h2>Jacobians and change of variables</h2>
 <p>Show why Jacobians matter when transforming distributions. • Simple change of variable in one dimension • If <span class="math inline">\(Y = g(X)\)</span>, then <span class="math inline">\(f_Y(y) = f_X(x) \left| \frac{dx}{dy} \right|\)</span> • Multivariate case: use Jacobian determinant • Example: transforming from Cartesian to polar coordinates • Example: bivariate normal to standard normal → Cholesky or whitening</p>
 <p>Application: Why this matters in simulations and Bayesian inference (brief mention of Metropolis-Hastings, normalizing flows, etc.)</p>
+</section>
+<section id="conclusions" class="slide level2">
+<h2>Conclusions</h2>
+<ul>
+<li>Calculus is not just background math—it’s the <strong>engine</strong> of statistical theory.</li>
+<li>Beyond undergraduate stats: everything from MLE, Bayesian posteriors, to machine learning involves gradients and Hessians. Suggest: for students who love math but unsure about statistics—you are the kind of person statistics needs.</li>
+</ul>
 
 </section>
     </div>
@@ -412,6 +626,44 @@ Dr.&nbsp;Haziq Jamil <a href="https://orcid.org/0000-0003-3298-1010" class="quar
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
         const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
