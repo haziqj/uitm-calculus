@@ -28,3 +28,59 @@ execute:
   freeze: auto
   cache: false
 ---
+
+## Functions
+
+
+
+## Derivatives
+
+::: {#def-derivatives}
+
+#### Derivatives
+
+Hello
+
+:::
+
+## Derivatives
+
+Goal: Shift mindset from high-school calculus to tools for optimization and multidimensional problems.
+	•	Quick recap: derivative as slope, second derivative as curvature
+	•	Extension to multivariable functions:
+	•	Partial derivatives
+	•	Gradient as direction of steepest ascent
+	•	Hessian as local curvature matrix
+	•	Applications in optimization: what it means to maximize or minimize a function with multiple variables
+
+Example: A simple multivariate function $f(x, y) = -x^2 - y^2 + 4x + 6y$.
+Find its critical point using partial derivatives, use the Hessian to classify.
+
+
+## Maximum likelihood estimation
+
+- Define likelihood: $L(\theta) = \prod_{i=1}^n f(x_i \mid \theta)$
+  - Log-likelihood: easier to differentiate
+  - MLE found by solving $\frac{d}{d\theta} \ell(\theta) = 0$
+
+## Examples
+
+Emphasize: the maximum is found because second derivative is negative (concavity)
+
+## Fisher information 
+
+Second derivative = Fisher Information (intuition)
+
+- Negative expected second derivative of log-likelihood
+- Measures how peaked the likelihood is → how much information data carries about the parameter
+
+## Jacobians and change of variables 
+
+Show why Jacobians matter when transforming distributions.
+	•	Simple change of variable in one dimension
+	•	If $Y = g(X)$, then $f_Y(y) = f_X(x) \left| \frac{dx}{dy} \right|$
+	•	Multivariate case: use Jacobian determinant
+	•	Example: transforming from Cartesian to polar coordinates
+	•	Example: bivariate normal to standard normal → Cholesky or whitening
+
+Application: Why this matters in simulations and Bayesian inference (brief mention of Metropolis-Hastings, normalizing flows, etc.)
