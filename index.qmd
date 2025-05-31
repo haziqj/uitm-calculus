@@ -189,11 +189,36 @@ ggplot() +
 
 ## The concept of optimisation
 
-- When $f$ is some kind of a "reward" function, then the value of $x$ that maximises $f$ is highly of interest.
+- When $f$ is some kind of a "reward" function, then the value of $x$ that maximises $f$ is highly of interest. Some examples:
+  - 💰 **Profit maximisation**: Find the price that maximises profit.
+  - 🧬 **Biological processes**: Find the conditions that maximise growth or reproduction rates.
+  - 👷‍♂️ **Engineering**: Find the design parameters that maximise strength or efficiency.
 
-- Derivatives help us find maxima (or minima): Solve $f'(x) = 0$.
 
-- Example: Find the maximum of $f(x) = -3x^4 + 4x^3 + 12x^2$.
+- Derivatives help us find so-called *critical values*: [Solve $f'(x) = 0$]{.ubdrubysoftbg}.
+
+::: {#exm-maxima}
+
+Find the maximum of $f(x) = -3x^4 + 4x^3 + 12x^2$.
+
+:::
+
+. . . 
+
+$$
+\begin{align*}
+f'(x) = -12x^3 + 12x^2 + 24x &= 0 \\
+\Leftrightarrow 12x(2 + x - x^2) &= 0 \\
+\Leftrightarrow 12x(x+1)(x-2) &= 0 \\
+\Leftrightarrow x &= 0, -1, 2.
+\end{align*}
+$$
+
+. . . 
+
+::: {.nudge-up-medium}
+Are all of these critical values maxima values? 🤔
+:::
 
 ## Graphically...
 
@@ -255,9 +280,11 @@ ggplot(df, aes(x, y)) +
 
 ## How do we know if it's a maxima or minima?
 
-Second derivative test: Measure the **change in slope** around the critical point $\hat x$, i.e. $f''(\hat x) = \frac{d}{dx}\left( \frac{df}{dx}(x) \right)$.
+[**Second derivative test:**]{.ubdrubydeep} Measure the **change in slope** around the critical point $\hat x$, i.e. $f''(\hat x) = \frac{d}{dx}\left( \frac{df}{dx}(x) \right) = \frac{d^2f}{dx^2}(x)$.
 
+. . . 
 
+::: {.nudge-down-medium}
 
 | Behaviour of $f$ near $\hat x$               | $f''(\hat x)$       | Shape             | Conclusion     |
 |-------------------------------|---------------------|----------------------|-------------------|----------------|
@@ -265,16 +292,127 @@ Second derivative test: Measure the **change in slope** around the critical poin
 | Decreasing → Increasing       | $f''(\hat x) > 0$ | Convex (∪)    | Local minimum  |
 | No sign change / flat region  |  $f''(\hat x) = 0$   | Unknown / flat    | Inconclusive   |
 
+:::
 
-## Uses of calculus in everyday life
+## Curvature and concavity
 
-1. **Physics**: Calculating velocity and acceleration from position functions.
-2. **Economics**: Finding marginal cost and revenue functions.
-3. **Engineering**: Optimizing designs for strength and efficiency.
-4. **Biology**: Modeling population growth rates.
-5. **Finance**: Analyzing risk and return in investment portfolios.
+::: {#def-curvature}
+Let $\mathcal C_x$ denote the *osculating circle* at $x$ with centre $c$ and radius $r$, i.e. the circle that best approximates the graph of $f$ at $x$.
+The curvature $\kappa$ of a graph of a function $f$ at a point $x$ is defined as $\kappa = \frac{1}{r}$.
+:::
+
+```{r}
+#| fig-width: 7
+#| fig-height: 3
+#| out-width: 100%
+set.seed(123)
+n1 <- 5
+n2 <- 500
+nratio <- sqrt(n2 / n1)
+m <- 100
+B <- 200
+mu <- c(seq(5.8, 10.2, length = m - 1), 8)
+res <- matrix(NA, nrow = m, ncol = B) 
+score_vec1 <- score_vec2 <- mean_vec2 <- mean_vec1 <- rep(NA, B)
+
+# Small FI
+for (j in 1:B) {
+  X <- rnorm(n1, mean = 8, sd = 1)
+  ll <- rep(NA, length(mu))
+  for (i in seq_along(ll)) 
+    ll[i] <- sum(dnorm(X, mean = mu[i], sd = 1, log = TRUE)) 
+  res[, j] <- ll
+  mean_vec1[j] <- mean(X)
+  score_vec1[j] <- sum(X - 8)
+}
+colnames(res) <- 1:B
+res1 <-
+  as_tibble(nratio * res) %>%
+  mutate(mu = mu,
+         mean = apply(nratio * res, 1, mean),
+         n = n1) 
+
+# Big FI
+for (j in 1:B) {
+  X <- rnorm(n2, mean = 8, sd = 1)
+  ll <- rep(NA, length(mu))
+  for (i in seq_along(ll)) 
+    ll[i] <- sum(dnorm(X, mean = mu[i], sd = 1, log = TRUE)) 
+  res[, j] <- ll
+  mean_vec2[j] <- mean(X)
+  score_vec2[j] <- sum(X - 8)
+}
+colnames(res) <- 1:B
+res2 <-
+  as_tibble(res) %>%
+  mutate(mu = mu,
+         mean = apply(res, 1, mean),
+         n = n2) 
+
+res <- bind_rows(res1, res2) %>%
+  pivot_longer(`1`:`B`)
+
+tmp <- res %>% filter(mu == 8) %>% summarise(mean = unique(mean)) %>% unlist()
+diff <- max(tmp) - min(tmp)
+
+res <-
+  res |>
+  mutate(
+    value = case_when(
+      n == n2 ~ value + diff,
+      TRUE ~ value 
+    ),
+    mean = case_when(
+      n == n2 ~ mean + diff,
+      TRUE ~ mean
+    ),
+    n = factor(n, labels = c("High curvature", "Low curvature"))
+  )
+
+ymax <- max(res$value) + 0.25 * abs(max(res$value))
+ymin <- min(res$value)
+
+r1 <- 5 * sd(mean_vec1)
+r2 <- 8 * sd(mean_vec2)
+
+circle <- tibble(
+  n = factor(1:2, labels = c("High curvature", "Low curvature")),  
+  xc = c(8, 8),
+  a = c(r1, r2),
+  b = 500 * c(1, 1 * r2 / r1),
+  yc = tmp[1] - b,
+  phi = c(0, 0)
+) %>% 
+  expand_grid(t = seq(0, 2 * pi, length = 100)) %>%
+  mutate(x = xc + a * cos(t) * cos(phi) - b * sin(t) * sin(phi),
+         y = yc + a * cos(t) * sin(phi) + b * sin(t) * cos(phi))
+
+circle_text <- 
+  filter(circle, t > 0.39 & t < 0.45) %>%
+  mutate(a2 = xc + a, label = c("r == 1 / kappa", NA))
+
+my_cols <- RColorBrewer::brewer.pal(3, "Set1")
+res |>
+  group_by(mu, n) |>
+  summarise(mean = mean(mean)) |>
+  ggplot(aes(mu, value)) +
+  geom_path(data = circle, aes(x, y), col = my_cols[1]) +
+  geom_line(aes(y = mean), col = "black", size = 1) +
+  geom_segment(data = circle_text, aes(xc, yc, xend = x, yend = y), col = my_cols[1]) +
+  geom_text(data = circle_text, aes((xc + x) / 2 + 0.5, (yc + y) / 2 - 20, label = label), 
+            parse = TRUE, col = my_cols[1]) +
+  geom_vline(xintercept = 8, linetype = "dashed") +
+  theme(legend.position = "none",
+        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  labs(y = "f(x)", x = "x") +
+  coord_cartesian(ylim = c(ymin + 800, ymax), xlim = c(6, 10)) +
+  facet_grid(. ~ n) +
+  theme_bw() + 
+  theme(axis.text = element_blank(), axis.ticks = element_blank()) 
+```
 
 
+# A statistical persepctive
 
 ## Motivation
 

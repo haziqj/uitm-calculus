@@ -86,6 +86,13 @@ $ubddarkgrey: #404041;
   display: inline-block;
 }
 
+.ubdrubysoftbg {
+  background-color: $ubdrubysoft;
+  padding: 0.1em;
+  border-radius: 5px;
+  display: inline-block;
+}
+
 // fonts
 // @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 // @import url(https://fonts.googleapis.com/css?family=Roboto:200,200i,300,300i,350,350i,400,400i);
@@ -623,7 +630,7 @@ div.quarto-figure.quarto-figure-center {
   transform: translateY(25px);
 }
 
-.nudge-down {
+.nudge-down-small {
   transform: translateY(12.5px);
 }
 
@@ -632,7 +639,7 @@ div.quarto-figure.quarto-figure-center {
 }
 
 /* Style the theorem class like a callout */
-.theorem.definition {
+.theorem {
   border: 0.5px solid $ubdgrey;
   border-left: 5px solid $ubdrubydeep; /* Warning yellow/orange */
   background-color: #fff;      /* Soft highlight */
@@ -642,11 +649,11 @@ div.quarto-figure.quarto-figure-center {
   box-shadow: 0 0 0 1px #eee;
 }
 
-.theorem.definition .theorem-title {
+.theorem .theorem-title {
   color: $ubdrubydeep;
 }
 
-.theorem.definition p:first-of-type {
+.theorem p:first-of-type {
   margin-top: 0.1rem;
   margin-bottom: 0;
 }
