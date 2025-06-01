@@ -294,17 +294,18 @@ ggplot(df, aes(x, y)) +
 
 :::
 
-## Curvature and concavity
+## Curvature
 
 ::: {#def-curvature}
 Let $\mathcal C_x$ denote the *osculating circle* at $x$ with centre $c$ and radius $r$, i.e. the circle that best approximates the graph of $f$ at $x$.
-The curvature $\kappa$ of a graph of a function $f$ at a point $x$ is defined as $\kappa = \frac{1}{r}$.
+The curvature $\kappa$ for a graph of a function $f$ at a point $x$ is defined as $\kappa = \frac{1}{r}$.
 :::
 
 ```{r}
 #| fig-width: 7
 #| fig-height: 3
 #| out-width: 100%
+#| label: curvature-concav
 set.seed(123)
 n1 <- 5
 n2 <- 500
@@ -366,7 +367,7 @@ res <-
       n == n2 ~ mean + diff,
       TRUE ~ mean
     ),
-    n = factor(n, labels = c("High curvature", "Low curvature"))
+    n = factor(n, labels = c("Weak curvature", "Strong curvature"))
   )
 
 ymax <- max(res$value) + 0.25 * abs(max(res$value))
@@ -376,7 +377,7 @@ r1 <- 5 * sd(mean_vec1)
 r2 <- 8 * sd(mean_vec2)
 
 circle <- tibble(
-  n = factor(1:2, labels = c("High curvature", "Low curvature")),  
+  n = factor(1:2, labels = c("Weak curvature", "Strong curvature")),  
   xc = c(8, 8),
   a = c(r1, r2),
   b = 500 * c(1, 1 * r2 / r1),
@@ -389,7 +390,7 @@ circle <- tibble(
 
 circle_text <- 
   filter(circle, t > 0.39 & t < 0.45) %>%
-  mutate(a2 = xc + a, label = c("r == 1 / kappa", NA))
+  mutate(a2 = xc + a, label = c("r == 1 / kappa", "r"))
 
 my_cols <- RColorBrewer::brewer.pal(3, "Set1")
 res |>
@@ -398,19 +399,63 @@ res |>
   ggplot(aes(mu, value)) +
   geom_path(data = circle, aes(x, y), col = my_cols[1]) +
   geom_line(aes(y = mean), col = "black", size = 1) +
-  geom_segment(data = circle_text, aes(xc, yc, xend = x, yend = y), col = my_cols[1]) +
-  geom_text(data = circle_text, aes((xc + x) / 2 + 0.5, (yc + y) / 2 - 20, label = label), 
-            parse = TRUE, col = my_cols[1]) +
   geom_vline(xintercept = 8, linetype = "dashed") +
-  theme(legend.position = "none",
-        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
-  labs(y = "f(x)", x = "x") +
+  geom_segment(data = circle_text, aes(xc, yc, xend = x, yend = y), col = my_cols[1]) +
+  geom_point(data = circle_text, aes(xc, yc), col = my_cols[1], size = 1.5) +
+  geom_text(data = circle_text, aes((xc + x) / 2, (yc + y) / 2 / 0.9, label = label), 
+            parse = TRUE, col = my_cols[1]) +
+  geom_text(data = circle_text, aes(xc, yc), label = "c", nudge_x = -0.12) +
+  scale_x_continuous(breaks = c(6, 7, 8, 9, 10), labels = c("", "", "x", "", "")) +
+  labs(y = "f(x)", x = NULL) +
   coord_cartesian(ylim = c(ymin + 800, ymax), xlim = c(6, 10)) +
   facet_grid(. ~ n) +
   theme_bw() + 
-  theme(axis.text = element_blank(), axis.ticks = element_blank()) 
+  theme(axis.text.y = element_blank(), axis.ticks = element_blank()) 
 ```
 
+## Curvature and concavity
+
+::: {#def-curvature-alt}
+#### Curvature
+The (signed) curvature for a graph $y=f(x)$ is
+$$
+\kappa = \frac{f''(x)}{\big(1 + [f'(x)]^2\big)^{3/2}}.
+$$
+:::
+
+- The second derivative $f''(x)$ tells us how fast the slope is changing.
+
+- The [**sign**]{.ubdrubydeep} of the curvature is the same as the sign of $f''(x)$. Hence,
+  - If $f''(x) > 0$, the graph is **concave up** (convex).
+  - If $f''(x) < 0$, the graph is **concave down** (concave).
+
+- The [**magnitude**]{.ubdrubydeep} of the curvature is proportional to $f''(x)$. Hence,
+  - If $|f''(x)|$ is large, the graph is *steep* and "curvier".
+  - If $|f''(x)|$ is small, the graph is *flat* and "gentle".
+  
+- For reference, a straight line has zero curvature.
+
+<!-- ```{r} -->
+<!-- #| fig-width: 7 -->
+<!-- #| fig-height: 3 -->
+<!-- #| out-width: 100% -->
+<!-- #| label: curvature-concav -->
+<!-- ``` -->
+
+## Summary so far
+
+- Derivatives represent rate of change (slope) of a function $f:\mathcal X \to \mathbb R$.
+
+- Interested in optimising an *objective* function $f(x)$ representing some kind of "reward" or "cost".
+
+- Find critical points by solving $f'(x) = 0$.
+
+- Use the second derivative test to classify critical points:
+  - If $f''(x) < 0$, then $f$ is concave down at $x$ and $x$ is a local maximum.
+  - If $f''(x) > 0$, then $f$ is concave up at $x$ and $x$ is a local minimum.
+  - If $f''(x) = 0$, then the test is inconclusive.
+  
+- Curvature tells us how steep the curve is at its optima. In some sense, it tells us how hard or easy it is to find the optimum.
 
 # A statistical persepctive
 

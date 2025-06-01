@@ -370,20 +370,63 @@ f'(x) = -12x^3 + 12x^2 + 24x &amp;= 0 \\
 </div>
 </div>
 </section>
-<section id="curvature-and-concavity" class="slide level2">
-<h2>Curvature and concavity</h2>
+<section id="curvature" class="slide level2">
+<h2>Curvature</h2>
 <div id="def-curvature" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2</strong></span> Let <span class="math inline">\(\mathcal C_x\)</span> denote the <em>osculating circle</em> at <span class="math inline">\(x\)</span> with centre <span class="math inline">\(c\)</span> and radius <span class="math inline">\(r\)</span>, i.e.&nbsp;the circle that best approximates the graph of <span class="math inline">\(f\)</span> at <span class="math inline">\(x\)</span>. The curvature <span class="math inline">\(\kappa\)</span> of a graph of a function <span class="math inline">\(f\)</span> at a point <span class="math inline">\(x\)</span> is defined as <span class="math inline">\(\kappa = \frac{1}{r}\)</span>.</p>
+<p><span class="theorem-title"><strong>Definition 2</strong></span> Let <span class="math inline">\(\mathcal C_x\)</span> denote the <em>osculating circle</em> at <span class="math inline">\(x\)</span> with centre <span class="math inline">\(c\)</span> and radius <span class="math inline">\(r\)</span>, i.e.&nbsp;the circle that best approximates the graph of <span class="math inline">\(f\)</span> at <span class="math inline">\(x\)</span>. The curvature <span class="math inline">\(\kappa\)</span> for a graph of a function <span class="math inline">\(f\)</span> at a point <span class="math inline">\(x\)</span> is defined as <span class="math inline">\(\kappa = \frac{1}{r}\)</span>.</p>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" style="width:100.0%"></p>
+<p><img data-src="index_files/figure-revealjs/curvature-concav-1.png" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
+</section>
+<section id="curvature-and-concavity" class="slide level2">
+<h2>Curvature and concavity</h2>
+<div id="def-curvature-alt" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 3 (Curvature)</strong></span> The (signed) curvature for a graph <span class="math inline">\(y=f(x)\)</span> is <span class="math display">\[
+\kappa = \frac{f''(x)}{\big(1 + [f'(x)]^2\big)^{3/2}}.
+\]</span></p>
+</div>
+<ul>
+<li><p>The second derivative <span class="math inline">\(f''(x)\)</span> tells us how fast the slope is changing.</p></li>
+<li><p>The <span class="ubdrubydeep"><strong>sign</strong></span> of the curvature is the same as the sign of <span class="math inline">\(f''(x)\)</span>. Hence,</p>
+<ul>
+<li>If <span class="math inline">\(f''(x) &gt; 0\)</span>, the graph is <strong>concave up</strong> (convex).</li>
+<li>If <span class="math inline">\(f''(x) &lt; 0\)</span>, the graph is <strong>concave down</strong> (concave).</li>
+</ul></li>
+<li><p>The <span class="ubdrubydeep"><strong>magnitude</strong></span> of the curvature is proportional to <span class="math inline">\(f''(x)\)</span>. Hence,</p>
+<ul>
+<li>If <span class="math inline">\(|f''(x)|\)</span> is large, the graph is <em>steep</em> and “curvier”.</li>
+<li>If <span class="math inline">\(|f''(x)|\)</span> is small, the graph is <em>flat</em> and “gentle”.</li>
+</ul></li>
+<li><p>For reference, a straight line has zero curvature.</p></li>
+</ul>
+<!-- ```{r} -->
+<!-- #| fig-width: 7 -->
+<!-- #| fig-height: 3 -->
+<!-- #| out-width: 100% -->
+<!-- #| label: curvature-concav -->
+<!-- ``` -->
+</section>
+<section id="summary-so-far" class="slide level2">
+<h2>Summary so far</h2>
+<ul>
+<li><p>Derivatives represent rate of change (slope) of a function <span class="math inline">\(f:\mathcal X \to \mathbb R\)</span>.</p></li>
+<li><p>Interested in optimising an <em>objective</em> function <span class="math inline">\(f(x)\)</span> representing some kind of “reward” or “cost”.</p></li>
+<li><p>Find critical points by solving <span class="math inline">\(f'(x) = 0\)</span>.</p></li>
+<li><p>Use the second derivative test to classify critical points:</p>
+<ul>
+<li>If <span class="math inline">\(f''(x) &lt; 0\)</span>, then <span class="math inline">\(f\)</span> is concave down at <span class="math inline">\(x\)</span> and <span class="math inline">\(x\)</span> is a local maximum.</li>
+<li>If <span class="math inline">\(f''(x) &gt; 0\)</span>, then <span class="math inline">\(f\)</span> is concave up at <span class="math inline">\(x\)</span> and <span class="math inline">\(x\)</span> is a local minimum.</li>
+<li>If <span class="math inline">\(f''(x) = 0\)</span>, then the test is inconclusive.</li>
+</ul></li>
+<li><p>Curvature tells us how steep the curve is at its optima. In some sense, it tells us how hard or easy it is to find the optimum.</p></li>
+</ul>
 </section>
 <section>
 <section id="a-statistical-persepctive" class="title-slide slide level1 center">
