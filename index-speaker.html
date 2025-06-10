@@ -433,21 +433,54 @@ f'(x) = -12x^3 + 12x^2 + 24x &amp;= 0 \\
 <h1>A statistical persepctive</h1>
 
 </section>
+<section id="but-what-is-statistics" class="slide level2">
+<h2>But what <em>is</em> statistics?</h2>
+<p>Statistics is a scientific subject that deals with the collection, analysis, interpretation, and presentation of data.</p>
+<ul>
+<li><p><strong>Collection</strong> means designing experiments, questionnaires, sampling schemes, and also administration of data collection.</p></li>
+<li><p><strong>Analysis</strong> means mathematically modelling, estimation, testing, forecasting.</p></li>
+</ul>
+<div class="nudge-up">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/ppdac.png" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+
+<aside><div>
+<p>See also: <em>The Art of Statistics: Learning from Data</em> by David Spiegelhalter.</p>
+</div></aside></section>
 <section id="motivation" class="slide level2">
 <h2>Motivation</h2>
-<p>Show students how theoretical tools they’re learning now are used to derive estimators;</p>
-<p>Plant the idea that Statistics isn’t just “data” or “Excel”, but has real mathematical depth; Give a clear reason to care about derivatives, gradients, Hessians, and Jacobians in practice.</p>
+<p>Some data…</p>
+<p>Plot first…</p>
 </section>
-<section id="functions" class="slide level2">
-<h2>Functions</h2>
+<section id="the-parametric-statistical-model" class="slide level2">
+<h2>The (parametric) statistical model</h2>
+<p>Assume that each observation <span class="math inline">\(X_i\)</span> is generated from a <em>probability function</em> <span class="math inline">\(f\)</span>, i.e. <span class="math display">\[
+X_i \sim f(x \mid \theta), \quad i = 1, \ldots, n.
+\]</span></p>
+<p>Furthermore,</p>
+<ol type="1">
+<li>Each observation <span class="math inline">\(X_i\)</span> is independent of the others.</li>
+<li>The functional form of <span class="math inline">\(f\)</span> is known.</li>
+<li><span class="math inline">\(\theta\)</span> is the <span class="uline">unknown</span> <em>parameter</em> that characterises the distribution <span class="math inline">\(f\)</span>.</li>
+</ol>
+<p>In other words, the parameter <span class="math inline">\(\theta\)</span> is all that is needed to know about the distribution of <span class="math inline">\(X_i\)</span>.</p>
 </section>
-<section id="derivatives" class="slide level2">
-<h2>Derivatives</h2>
+<section id="examples-of-parameteric-models" class="slide level2">
+<h2>Examples of parameteric models</h2>
 </section>
-<section id="derivatives-1" class="slide level2">
-<h2>Derivatives</h2>
-<p>Goal: Shift mindset from high-school calculus to tools for optimization and multidimensional problems. • Quick recap: derivative as slope, second derivative as curvature • Extension to multivariable functions: • Partial derivatives • Gradient as direction of steepest ascent • Hessian as local curvature matrix • Applications in optimization: what it means to maximize or minimize a function with multiple variables</p>
-<p>Example: A simple multivariate function <span class="math inline">\(f(x, y) = -x^2 - y^2 + 4x + 6y\)</span>. Find its critical point using partial derivatives, use the Hessian to classify.</p>
+<section id="effect-of-parameterisation" class="slide level2">
+<h2>Effect of parameterisation</h2>
+</section>
+<section id="we-only-have-data" class="slide level2">
+<h2>We only have data</h2>
+<p>&lt; IMAGE OF PROBABILITY VS STATISTICS &gt;</p>
+</section>
+<section id="the-likelihood-function" class="slide level2">
+<h2>The likelihood function</h2>
 </section>
 <section id="maximum-likelihood-estimation" class="slide level2">
 <h2>Maximum likelihood estimation</h2>
@@ -459,9 +492,9 @@ f'(x) = -12x^3 + 12x^2 + 24x &amp;= 0 \\
 </ul></li>
 </ul>
 </section>
-<section id="examples" class="slide level2">
-<h2>Examples</h2>
-<p>Emphasize: the maximum is found because second derivative is negative (concavity)</p>
+<section id="example-normal-mean" class="slide level2">
+<h2>Example (Normal mean)</h2>
+<p>House price data</p>
 </section>
 <section id="fisher-information" class="slide level2">
 <h2>Fisher information</h2>
@@ -471,10 +504,20 @@ f'(x) = -12x^3 + 12x^2 + 24x &amp;= 0 \\
 <li>Measures how peaked the likelihood is → how much information data carries about the parameter</li>
 </ul>
 </section>
-<section id="jacobians-and-change-of-variables" class="slide level2">
-<h2>Jacobians and change of variables</h2>
-<p>Show why Jacobians matter when transforming distributions. • Simple change of variable in one dimension • If <span class="math inline">\(Y = g(X)\)</span>, then <span class="math inline">\(f_Y(y) = f_X(x) \left| \frac{dx}{dy} \right|\)</span> • Multivariate case: use Jacobian determinant • Example: transforming from Cartesian to polar coordinates • Example: bivariate normal to standard normal → Cholesky or whitening</p>
-<p>Application: Why this matters in simulations and Bayesian inference (brief mention of Metropolis-Hastings, normalizing flows, etc.)</p>
+<section id="example-anova" class="slide level2">
+<h2>Example (ANOVA)</h2>
+<p>House price vs district in brunei</p>
+</section>
+<section id="example-wealth-data-pareto-distribution" class="slide level2">
+<h2>Example (Wealth data &amp; Pareto distribution)</h2>
+<!-- ## Jacobians and change of variables  -->
+<!-- Show why Jacobians matter when transforming distributions. -->
+<!--    •   Simple change of variable in one dimension -->
+<!--    •   If $Y = g(X)$, then $f_Y(y) = f_X(x) \left| \frac{dx}{dy} \right|$ -->
+<!--    •   Multivariate case: use Jacobian determinant -->
+<!--    •   Example: transforming from Cartesian to polar coordinates -->
+<!--    •   Example: bivariate normal to standard normal → Cholesky or whitening -->
+<!-- Application: Why this matters in simulations and Bayesian inference (brief mention of Metropolis-Hastings, normalizing flows, etc.) -->
 </section>
 <section id="conclusions" class="slide level2">
 <h2>Conclusions</h2>
