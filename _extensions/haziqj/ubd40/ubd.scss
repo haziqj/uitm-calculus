@@ -638,6 +638,14 @@ div.quarto-figure.quarto-figure-center {
   transform: translateY(37.5px);
 }
 
+.nudge-down-large {
+  transform: translateY(50px);
+}
+
+.nudge-down-xl {
+  transform: translateY(75px);
+}
+
 /* Style the theorem class like a callout */
 .theorem {
   border: 0.5px solid $ubdgrey;

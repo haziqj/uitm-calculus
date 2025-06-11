@@ -30,7 +30,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-1f709eec5f74125da34cc5c05c90e208.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-79010de16dbc3b4caad48b492025bb1b.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -235,8 +235,8 @@ L = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
 <div id="desmos-derivative" style="position: relative; width: 100%; height:88%;"></div>
 
 <script>
-  const elt = document.getElementById("desmos-derivative");
-  const calculator = Desmos.GraphingCalculator(elt, {
+  var elt = document.getElementById("desmos-derivative");
+  var calculator = Desmos.GraphingCalculator(elt, {
     expressions: true,
     settingsMenu: false,
     zoomButtons: true
@@ -251,7 +251,7 @@ L = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
     { id: 's', latex: 'L = \\frac{f(a+h) - f(a)}{h}' },
     { id: 'tangent', latex: 'y = L(x - a) + f(a)', color: Desmos.Colors.RED }
   ]);
-  
+
   calculator.setMathBounds({
     left: -1,
     right: 3,
@@ -471,16 +471,136 @@ X_i \sim f(x \mid \theta), \quad i = 1, \ldots, n.
 </section>
 <section id="examples-of-parameteric-models" class="slide level2">
 <h2>Examples of parameteric models</h2>
+<div class="nudge-down-xl">
+<table class="table-ubd caption-top">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 44%">
+<col style="width: 26%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th><span class="math inline">\(f(x \mid \theta)\)</span></th>
+<th><span class="math inline">\(\theta\)</span></th>
+<th>Remarks</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Binomial</td>
+<td><span class="math inline">\(\binom{n}{x} p^x (1 - p)^{n - x}\)</span></td>
+<td><span class="math inline">\(p \in (0, 1)\)</span></td>
+<td>No.&nbsp;successes in <span class="math inline">\(n\)</span> trials</td>
+</tr>
+<tr class="even">
+<td>Poisson</td>
+<td><span class="math inline">\(\frac{\lambda^x e^{-\lambda}}{x!}\)</span></td>
+<td><span class="math inline">\(\lambda &gt; 0\)</span></td>
+<td>Count data (events per interval)</td>
+</tr>
+<tr class="odd">
+<td>Uniform</td>
+<td><span class="math inline">\(\frac{1}{b - a}\)</span> for <span class="math inline">\(x \in [a, b]\)</span></td>
+<td><span class="math inline">\(a &lt; b\)</span></td>
+<td>Equally likely outcomes</td>
+</tr>
+<tr class="even">
+<td>Exponential</td>
+<td><span class="math inline">\(\lambda e^{-\lambda x}\)</span> for <span class="math inline">\(x \geq 0\)</span></td>
+<td><span class="math inline">\(\lambda &gt; 0\)</span></td>
+<td>Waiting time</td>
+</tr>
+<tr class="odd">
+<td>Normal</td>
+<td><span class="math inline">\(\frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x - \mu)^2}{2\sigma^2}\right)\)</span></td>
+<td><span class="math inline">\(\mu \in \mathbb{R},\ \sigma^2 &gt; 0\)</span></td>
+<td>Bell curve</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="effect-of-parameterisation" class="slide level2">
 <h2>Effect of parameterisation</h2>
+<div id="desmos-normal" style="position: relative; width: 100%; height: 88%;"></div>
+
+<script>
+  var elt = document.getElementById("desmos-normal");
+  var calculator = Desmos.GraphingCalculator(elt, {
+    expressions: true,
+    settingsMenu: false,
+    zoomButtons: true
+  });
+
+  calculator.setExpressions([
+    { id: 'mu', latex: '\\mu = 0', sliderBounds: { min: -5, max: 5 } },
+    { id: 'sigma', latex: '\\sigma = 1', sliderBounds: { min: 0.5, max: 3 } },
+    { id: 'f', latex: 'f(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} e^{-\\frac{(x - \\mu)^2}{2\\sigma^2}}' },
+    { id: 'graph', latex: 'y = f(x)', color: Desmos.Colors.BLUE }
+  ]);
+
+  calculator.setMathBounds({
+    left: -8,
+    right: 8,
+    bottom: -0.05,
+    top: 0.5
+  });
+</script>
 </section>
-<section id="we-only-have-data" class="slide level2">
-<h2>We only have data</h2>
-<p>&lt; IMAGE OF PROBABILITY VS STATISTICS &gt;</p>
+<section id="when-we-only-have-data" class="slide level2">
+<h2>When we only have data…</h2>
+<h3 id="probability-vs-statistics">Probability vs statistics</h3>
+<p>Given a model, probability allows us to <em>predict</em> data. Statistics on the other hand, allows us to <em>learn</em> from data.</p>
+<div class="columns">
+<div class="column" style="width:48%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>What is <span class="math inline">\(\Pr(X &gt; a)\)</span>?</li>
+<li>What is <span class="math inline">\(\operatorname{E}(X)\)</span>?</li>
+</ul>
+</div><div class="column" style="width:48%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>What is <span class="math inline">\(\theta\)</span>?</li>
+<li>Is <span class="math inline">\(\theta\)</span> larger than <span class="math inline">\(\theta_0\)</span>?</li>
+<li>How confident am I that <span class="math inline">\(\theta \in (\theta_l,\theta_u)\)</span>?</li>
+</ul>
+</div></div>
 </section>
 <section id="the-likelihood-function" class="slide level2">
 <h2>The likelihood function</h2>
+<div id="def-likelihood" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4</strong></span> The likelihood function is defined as the joint probability of the data <span class="math inline">\(\mathbf X = (X_1,\dots,X_n)^\top\)</span> given the parameter <span class="math inline">\(\theta\)</span>, i.e. <span class="math display">\[
+L(\theta) = \Pr(\mathbf X \mid \theta) = \prod_{i=1}^n f(X_i \mid \theta).
+\]</span> The log-likelihood is just the logarithm of the likelihood function: <span class="math display">\[
+\ell(\theta) = \log L(\theta) = \sum_{i=1}^n \log f(X_i \mid \theta).
+\]</span></p>
+</div>
+<p>The (log-)likelihood function tells us how plausible different values of the parameter <span class="math inline">\(\theta\)</span> are given the observed data <span class="math inline">\(\mathbf X\)</span>.</p>
 </section>
 <section id="maximum-likelihood-estimation" class="slide level2">
 <h2>Maximum likelihood estimation</h2>
@@ -494,7 +614,37 @@ X_i \sim f(x \mid \theta), \quad i = 1, \ldots, n.
 </section>
 <section id="example-normal-mean" class="slide level2">
 <h2>Example (Normal mean)</h2>
-<p>House price data</p>
+<p>Suppose we observe <span class="math inline">\(X_1, \ldots, X_n\)</span> from a normal distribution with unknown mean <span class="math inline">\(\mu\)</span> and known variance <span class="math inline">\(\sigma^2\)</span>. The log-likelihood function is given by <span class="math display">\[
+\begin{align*}
+\ell(\mu) &amp;= \sum_{i=1}^n \log f(X_i \mid \mu) \\
+&amp;= \sum_{i=1}^n \log \left( \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(X_i - \mu)^2}{2\sigma^2}} \right) \\
+&amp;= \sum_{i=1}^n \left\{ -\frac{1}{2} \log(2\pi\sigma^2) - \frac{(X_i - \mu)^2}{2\sigma^2} \right\} \\
+&amp;= -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^n (X_i - \mu)^2.
+\end{align*}
+\]</span></p>
+</section>
+<section id="example-normal-mean-cont." class="slide level2">
+<h2>Example (Normal mean, cont.)</h2>
+<p>To find the MLE of <span class="math inline">\(\mu\)</span>, we differentiate the log-likelihood function with respect to <span class="math inline">\(\mu\)</span> and set it to zero: <span class="math display">\[
+\begin{align*}
+\frac{d}{d\mu} \ell(\mu) &amp;= -\frac{1}{2\sigma^2} \cdot 2 \sum_{i=1}^n (X_i - \mu)(-1) \\
+&amp;= \frac{1}{\sigma^2} \sum_{i=1}^n (X_i - \mu) = 0 \\
+&amp;\Leftrightarrow \sum_{i=1}^n X_i - n\mu = 0
+\Leftrightarrow \mu = \frac{1}{n} \sum_{i=1}^n X_i.
+\end{align*}
+\]</span></p>
+<p>Thus, the MLE for <span class="math inline">\(\mu\)</span> is <span class="math inline">\(\hat\mu = \bar X = \frac{1}{n} \sum_{i=1}^n X_i\)</span>.</p>
+</section>
+<section id="brunei-house-price-data" class="slide level2">
+<h2>Brunei house price data</h2>
+<p>&lt;BOXPLOT OF SAMPLE DATA + Likelihood function&gt;</p>
+</section>
+<section id="but-wait-the-sample-was-random" class="slide level2">
+<h2>But wait, the sample was random…</h2>
+<p>&lt;Multiple samples, boxplot comparisons&gt;</p>
+</section>
+<section id="effect-of-sampling-variability-on-likelihood" class="slide level2">
+<h2>Effect of sampling variability on likelihood</h2>
 </section>
 <section id="fisher-information" class="slide level2">
 <h2>Fisher information</h2>
@@ -503,13 +653,9 @@ X_i \sim f(x \mid \theta), \quad i = 1, \ldots, n.
 <li>Negative expected second derivative of log-likelihood</li>
 <li>Measures how peaked the likelihood is → how much information data carries about the parameter</li>
 </ul>
-</section>
-<section id="example-anova" class="slide level2">
-<h2>Example (ANOVA)</h2>
-<p>House price vs district in brunei</p>
-</section>
-<section id="example-wealth-data-pareto-distribution" class="slide level2">
-<h2>Example (Wealth data &amp; Pareto distribution)</h2>
+<!-- ## Example (ANOVA) -->
+<!-- House price vs district in brunei -->
+<!-- ## Example (Wealth data & Pareto distribution) -->
 <!-- ## Jacobians and change of variables  -->
 <!-- Show why Jacobians matter when transforming distributions. -->
 <!--    •   Simple change of variable in one dimension -->

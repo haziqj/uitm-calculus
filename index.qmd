@@ -121,8 +121,8 @@ $$
 <div id="desmos-derivative" style="position: relative; width: 100%; height:88%;"></div>
 
 <script>
-  const elt = document.getElementById("desmos-derivative");
-  const calculator = Desmos.GraphingCalculator(elt, {
+  var elt = document.getElementById("desmos-derivative");
+  var calculator = Desmos.GraphingCalculator(elt, {
     expressions: true,
     settingsMenu: false,
     zoomButtons: true
@@ -137,7 +137,7 @@ $$
     { id: 's', latex: 'L = \\frac{f(a+h) - f(a)}{h}' },
     { id: 'tangent', latex: 'y = L(x - a) + f(a)', color: Desmos.Colors.RED }
   ]);
-  
+
   calculator.setMathBounds({
     left: -1,
     right: 3,
@@ -498,14 +498,131 @@ In other words, the parameter $\theta$ is all that is needed to know about the d
 
 ## Examples of parameteric models
 
+::: {.nudge-down-xl}
+| Name        | $f(x \mid \theta)$                                                   | $\theta$                                | Remarks                          |
+|-------------|----------------------------------------------------------------------|------------------------------------------|----------------------------------|
+| Binomial    | $\binom{n}{x} p^x (1 - p)^{n - x}$                                   | $p \in (0, 1)$        | No. successes in $n$ trials        |
+| Poisson     | $\frac{\lambda^x e^{-\lambda}}{x!}$                                  | $\lambda > 0$                            | Count data (events per interval) |
+| Uniform     | $\frac{1}{b - a}$ for $x \in [a, b]$                                 | $a < b$                                  | Equally likely outcomes     |
+| Exponential | $\lambda e^{-\lambda x}$ for $x \geq 0$                              | $\lambda > 0$                            | Waiting time        |
+| Normal      | $\frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x - \mu)^2}{2\sigma^2}\right)$ | $\mu \in \mathbb{R},\ \sigma^2 > 0$ | Bell curve       |
+|   |   |   |
+: {.table-ubd}
+:::
+
 ## Effect of parameterisation
 
-## We only have data
+```{=html}
+<div id="desmos-normal" style="position: relative; width: 100%; height: 88%;"></div>
 
-< IMAGE OF PROBABILITY VS STATISTICS >
+<script>
+  var elt = document.getElementById("desmos-normal");
+  var calculator = Desmos.GraphingCalculator(elt, {
+    expressions: true,
+    settingsMenu: false,
+    zoomButtons: true
+  });
+
+  calculator.setExpressions([
+    { id: 'mu', latex: '\\mu = 0', sliderBounds: { min: -5, max: 5 } },
+    { id: 'sigma', latex: '\\sigma = 1', sliderBounds: { min: 0.5, max: 3 } },
+    { id: 'f', latex: 'f(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} e^{-\\frac{(x - \\mu)^2}{2\\sigma^2}}' },
+    { id: 'graph', latex: 'y = f(x)', color: Desmos.Colors.BLUE }
+  ]);
+
+  calculator.setMathBounds({
+    left: -8,
+    right: 8,
+    bottom: -0.05,
+    top: 0.5
+  });
+</script>
+```
+
+## When we only have data...
+
+### Probability vs statistics
+
+
+Given a model, probability allows us to *predict* data.
+Statistics on the other hand, allows us to *learn* from data.
+
+
+::: {.columns}
+
+::: {.column width=48%}
+
+```{tikz}
+\usetikzlibrary{fit,positioning,shapes.geometric,decorations.pathreplacing,calc}
+\begin{tikzpicture}[scale=0.8, transform shape]
+\tikzstyle{obsvar}=[rectangle, thick, minimum size = 10mm,draw =black!80, node distance = 1mm]
+\tikzstyle{connect}=[-latex, thick]
+
+\node[obsvar] (fx) [] {$\hspace{1em}f(x|\theta)\hspace{1em}$};
+\node (xx) [right=of fx] {\textcolor{blue}{$\{X_1,\dots,X_n\}$}};
+\node (theta) [left=of fx] {\textcolor{red}{$\theta$}};
+\node (d1) [below=of fx,yshift=9mm] {Model};
+\node (d2) [below=of xx,yshift=11mm] {\scriptsize \textcolor{blue}{prob.}};
+\node (d3) [below=of theta,yshift=11mm] {\scriptsize \textcolor{red}{param.}};
+\node (d1) [above=of fx,yshift=-5mm] {\underline{Probability}};
+
+\path (fx) edge [connect] (xx)
+      (theta) edge [connect] (fx);
+
+\end{tikzpicture}
+```
+
+- What is $\Pr(X > a)$?
+- What is $\operatorname{E}(X)$?
+
+
+:::
+
+::: {.column width=48%}
+
+
+```{tikz}
+\usetikzlibrary{fit,positioning,shapes.geometric,decorations.pathreplacing,calc}
+\begin{tikzpicture}[scale=0.8, transform shape]
+\tikzstyle{obsvar}=[rectangle, thick, minimum size = 10mm,draw =black!80, node distance = 1mm]
+\tikzstyle{connect}=[-latex, thick]
+\node[obsvar] (fx) [] {$\hspace{1em}f(x|\theta)\hspace{1em}$};
+\node (xx) [right=of fx] {\textcolor{red}{$\{x_1,\dots,x_n\}$}};
+\node (theta) [left=of fx] {\textcolor{blue}{$\hat\theta$}};
+\node (d1) [below=of fx,yshift=9mm] {Model};
+\node (d2) [below=of xx,yshift=11mm] {\scriptsize \textcolor{red}{data}};
+\node (d3) [below=of theta,yshift=11mm] {\scriptsize \textcolor{blue}{est.}};
+\node (d1) [above=of fx,yshift=-5mm] {\underline{Statistics}};
+
+\path (fx) edge [connect] (theta)
+      (xx) edge [connect] (fx);
+
+\end{tikzpicture}
+```
+
+- What is $\theta$?
+- Is $\theta$ larger than $\theta_0$?
+- How confident am I that $\theta \in (\theta_l,\theta_u)$?
+
+:::
+
+:::
+
 
 ## The likelihood function
 
+::: {#def-likelihood}
+The likelihood function is defined as the joint probability of the data $\mathbf X = (X_1,\dots,X_n)^\top$ given the parameter $\theta$, i.e.
+$$
+L(\theta) = \Pr(\mathbf X \mid \theta) = \prod_{i=1}^n f(X_i \mid \theta).
+$$
+The log-likelihood is just the logarithm of the likelihood function:
+$$
+\ell(\theta) = \log L(\theta) = \sum_{i=1}^n \log f(X_i \mid \theta).
+$$
+:::
+
+The (log-)likelihood function tells us how plausible different values of the parameter $\theta$ are given the observed data $\mathbf X$.
 
 ## Maximum likelihood estimation
 
@@ -515,7 +632,40 @@ In other words, the parameter $\theta$ is all that is needed to know about the d
 
 ## Example (Normal mean)
 
-House price data
+Suppose we observe $X_1, \ldots, X_n$ from a normal distribution with unknown mean $\mu$ and known variance $\sigma^2$.
+The log-likelihood function is given by
+$$
+\begin{align*}
+\ell(\mu) &= \sum_{i=1}^n \log f(X_i \mid \mu) \\
+&= \sum_{i=1}^n \log \left( \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(X_i - \mu)^2}{2\sigma^2}} \right) \\
+&= \sum_{i=1}^n \left\{ -\frac{1}{2} \log(2\pi\sigma^2) - \frac{(X_i - \mu)^2}{2\sigma^2} \right\} \\
+&= -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^n (X_i - \mu)^2.
+\end{align*}
+$$
+
+## Example (Normal mean, cont.)
+
+To find the MLE of $\mu$, we differentiate the log-likelihood function with respect to $\mu$ and set it to zero:
+$$
+\begin{align*}
+\frac{d}{d\mu} \ell(\mu) &= -\frac{1}{2\sigma^2} \cdot 2 \sum_{i=1}^n (X_i - \mu)(-1) \\
+&= \frac{1}{\sigma^2} \sum_{i=1}^n (X_i - \mu) = 0 \\
+&\Leftrightarrow \sum_{i=1}^n X_i - n\mu = 0 
+\Leftrightarrow \mu = \frac{1}{n} \sum_{i=1}^n X_i.
+\end{align*}
+$$
+
+Thus, the MLE for $\mu$ is $\hat\mu = \bar X = \frac{1}{n} \sum_{i=1}^n X_i$.
+
+## Brunei house price data
+
+<BOXPLOT OF SAMPLE DATA + Likelihood function> 
+
+## But wait, the sample was random...
+
+<Multiple samples, boxplot comparisons>
+
+## Effect of sampling variability on likelihood
 
 ## Fisher information 
 
@@ -525,12 +675,12 @@ Second derivative = Fisher Information (intuition)
 - Measures how peaked the likelihood is → how much information data carries about the parameter
 
 
-## Example (ANOVA)
+<!-- ## Example (ANOVA) -->
 
-House price vs district in brunei
+<!-- House price vs district in brunei -->
 
 
-## Example (Wealth data & Pareto distribution)
+<!-- ## Example (Wealth data & Pareto distribution) -->
 
 <!-- ## Jacobians and change of variables  -->
 
