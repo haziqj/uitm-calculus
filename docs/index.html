@@ -453,8 +453,84 @@ f'(x) = -12x^3 + 12x^2 + 24x &amp;= 0 \\
 </div></aside></section>
 <section id="motivation" class="slide level2">
 <h2>Motivation</h2>
-<p>Some data…</p>
-<p>Plot first…</p>
+<blockquote>
+<p>I toss a coin <span class="math inline">\(n\)</span> times and I wish to find <span class="math inline">\(p\)</span>, the probability of heads. Let <span class="math inline">\(X_i=1\)</span> if a heads turns up, and <span class="math inline">\(X_i=0\)</span> if tails.</p>
+</blockquote>
+<ul>
+<li><p>I do not know the value of <span class="math inline">\(p\)</span>, so I want to estimate it somehow.</p></li>
+<li><p>I have a “guess” what it might be e.g.&nbsp;<span class="math inline">\(p=0.5\)</span> or <span class="math inline">\(p=0.7\)</span>.</p></li>
+<li><p>How do I objectively decide which value is better?</p></li>
+</ul>
+<p><img data-src="figures/bentcoin.png" class="absolute" style="top: 200px; right: 10px; width: 220px; "></p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>A more high-stakes example</strong></p>
+</div>
+<div class="callout-content">
+<p>Think of the binary outcomes as a stock price rising or falling. You’ll need to decide to invest based on what you believe (or the data suggests) the probability of the stock price rising is.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="a-probabilistic-model" class="slide level2">
+<h2>A probabilistic model</h2>
+<p>Each <span class="math inline">\(X_i\)</span> is a <em>random variable</em> taking only two possible outcomes, i.e. <span class="math display">\[
+X_i = \begin{cases}
+1 &amp;\text{w.p. } \ \ p \\
+0 &amp;\text{w.p. } \ \ 1-p \\
+\end{cases}
+\]</span> This is known as a <strong>Bernoulli</strong> random variable.</p>
+<div class="fragment">
+<p>Suppose that <span class="math inline">\(X=X_1 + \dots + X_n\)</span> — i.e.&nbsp;we are counting the number of heads in <span class="math inline">\(n\)</span> tossess — then this becomes a <strong>binomial</strong> random variable. We write <span class="math inline">\(X \sim \operatorname{Bin}(n, p)\)</span>, and the <em>probability mass function</em> is given by <span class="math display">\[
+f(x \mid p) = \Pr(X = x) = \binom{n}{x} p^x (1 - p)^{n - x}, \quad x = 0, 1, \ldots, n.
+\]</span></p>
+</div>
+</section>
+<section id="learning-from-data" class="slide level2">
+<h2>Learning from data</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong><span class="math inline">\(p\)</span> is unknown</strong></p>
+</div>
+<div class="callout-content">
+<p>If we do not know <span class="math inline">\(p\)</span>, then it is not possible to calculate probabilities, expectations, variances… ☹️</p>
+</div>
+</div>
+</div>
+<p>Naturally, you go ahead and collect data by tossing it <span class="math inline">\(n=10\)</span> times. The outcome happens to be <span class="math display">\[
+H, H, H, T, T, H, H, T, H, H
+\]</span> There is a total of <span class="math inline">\(X=7\)</span> heads, and from this you surmise that (at least) the coin is <em>unlikely</em> to be fair, because:</p>
+<ul>
+<li>If <span class="math inline">\(p=0.5\)</span>, then <span class="math inline">\(\Pr(X=7 \mid p = 0.7) = \binom{10}{7} (0.5)^7 (0.5)^3 = 0.117\)</span>.</li>
+<li>If <span class="math inline">\(p=0.7\)</span>, then <span class="math inline">\(\Pr(X=7 \mid p = 0.5) = \binom{10}{7} (0.7)^7 (0.3)^3 = 0.267\)</span>.</li>
+<li>If <span class="math inline">\(p=0.9\)</span>, then <span class="math inline">\(\Pr(X=7 \mid p = 0.9) = \binom{10}{7} (0.9)^7 (0.1)^3 = 0.057\)</span>.</li>
+</ul>
+<div class="nudge-up-large">
+<p>How to formalise this idea?</p>
+</div>
+</section>
+<section id="the-likelihood-function" class="slide level2">
+<h2>The likelihood function</h2>
+<div id="def-likelihood" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4</strong></span> Given a probability function <span class="math inline">\(x \mapsto f(x\mid\theta)\)</span> where <span class="math inline">\(x\)</span> is a realisation of a random variable <span class="math inline">\(X\)</span>, the <em>likelihood function</em> is <span class="math inline">\(\theta \mapsto f(x\mid\theta)\)</span>, often written <span class="math inline">\(\mathcal L(\theta) = f(x \mid \theta)\)</span>.</p>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="the-parametric-statistical-model" class="slide level2">
 <h2>The (parametric) statistical model</h2>
@@ -565,7 +641,7 @@ X_i \sim f(x \mid \theta), \quad i = 1, \ldots, n.
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -579,7 +655,7 @@ X_i \sim f(x \mid \theta), \quad i = 1, \ldots, n.
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -591,26 +667,16 @@ X_i \sim f(x \mid \theta), \quad i = 1, \ldots, n.
 </ul>
 </div></div>
 </section>
-<section id="the-likelihood-function" class="slide level2">
+<section id="the-likelihood-function-1" class="slide level2">
 <h2>The likelihood function</h2>
 <div id="def-likelihood" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 4</strong></span> The likelihood function is defined as the joint probability of the data <span class="math inline">\(\mathbf X = (X_1,\dots,X_n)^\top\)</span> given the parameter <span class="math inline">\(\theta\)</span>, i.e. <span class="math display">\[
+<p><span class="theorem-title"><strong>Definition 5</strong></span> The likelihood function is defined as the joint probability of the data <span class="math inline">\(\mathbf X = (X_1,\dots,X_n)^\top\)</span> given the parameter <span class="math inline">\(\theta\)</span>, i.e. <span class="math display">\[
 L(\theta) = \Pr(\mathbf X \mid \theta) = \prod_{i=1}^n f(X_i \mid \theta).
 \]</span> The log-likelihood is just the logarithm of the likelihood function: <span class="math display">\[
 \ell(\theta) = \log L(\theta) = \sum_{i=1}^n \log f(X_i \mid \theta).
 \]</span></p>
 </div>
 <p>The (log-)likelihood function tells us how plausible different values of the parameter <span class="math inline">\(\theta\)</span> are given the observed data <span class="math inline">\(\mathbf X\)</span>.</p>
-</section>
-<section id="maximum-likelihood-estimation" class="slide level2">
-<h2>Maximum likelihood estimation</h2>
-<ul>
-<li>Define likelihood: <span class="math inline">\(L(\theta) = \prod_{i=1}^n f(x_i \mid \theta)\)</span>
-<ul>
-<li>Log-likelihood: easier to differentiate</li>
-<li>MLE found by solving <span class="math inline">\(\frac{d}{d\theta} \ell(\theta) = 0\)</span></li>
-</ul></li>
-</ul>
 </section>
 <section id="example-normal-mean" class="slide level2">
 <h2>Example (Normal mean)</h2>
@@ -637,7 +703,15 @@ L(\theta) = \Pr(\mathbf X \mid \theta) = \prod_{i=1}^n f(X_i \mid \theta).
 </section>
 <section id="brunei-house-price-data" class="slide level2">
 <h2>Brunei house price data</h2>
-<p>&lt;BOXPLOT OF SAMPLE DATA + Likelihood function&gt;</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="but-wait-the-sample-was-random" class="slide level2">
 <h2>But wait, the sample was random…</h2>
