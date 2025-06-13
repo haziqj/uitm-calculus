@@ -29,6 +29,72 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-79010de16dbc3b4caad48b492025bb1b.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -211,9 +277,9 @@ L = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
 </div><div class="column" style="width:5%;">
 
 </div><div class="column" style="width:45%;">
-<p><br></p>
-<p>We can derive it “by hand” using the definition. Let <span class="math inline">\(f(x) = x^2\)</span>. Then,</p>
-<p><br> <br></p>
+<div class="fragment">
+<div class="nudge-down">
+<p>We can derive it “by hand” using the definition. Let <span class="math inline">\(f(x) = x^2\)</span>. Then, <br></p>
 <p><span class="math display">\[
 \begin{align}
 \lim_{h \to 0} &amp; \frac{f(x + h) - f(x)}{h} \\
@@ -223,6 +289,8 @@ L = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
 &amp;= 2x.
 \end{align}
 \]</span></p>
+</div>
+</div>
 </div></div>
 
 <aside><div>
@@ -261,8 +329,8 @@ L = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
 
 </script>
 </section>
-<section id="what-is-a-derivative" class="slide level2">
-<h2>What is a derivative?</h2>
+<section id="but-is-a-derivative" class="slide level2">
+<h2>But <em>is</em> a derivative?</h2>
 <p>The derivative of a function tells you:</p>
 <ul>
 <li>🚀 How fast the function is <em>changing</em> at any point<br>
@@ -370,11 +438,39 @@ f'(x) = -12x^3 + 12x^2 + 24x &amp;= 0 \\
 </div>
 </div>
 </section>
+<section id="second-derivative-test" class="slide level2">
+<h2>Second derivative test</h2>
+<p>From Example 1, the second derivative is given by <span class="math display">\[
+\begin{align*}
+f''(x) &amp;= \frac{d}{dx}\left(-12x^3 + 12x^2 +24x\right) \\
+&amp;= -36x^2 + 24x + 24
+\end{align*}
+\]</span></p>
+<div class="nudge-up">
+<p>Plug in the critical points:</p>
+<ul>
+<li><span class="math inline">\(x=-1\)</span>: <span class="math inline">\(f''(-1) = -36 - 24 + 24 = -36 &lt; 0\)</span>, hence local maximum.</li>
+<li><span class="math inline">\(x=0\)</span>: <span class="math inline">\(f''(0) = 0 + 0 + 24 = 24 &gt; 0\)</span>, hence local minimum.</li>
+<li><span class="math inline">\(x=2\)</span>: <span class="math inline">\(f''(2) = -144 + 48 + 24 = -72 &lt; 0\)</span>, hence local maximum.</li>
+</ul>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Often it is not enough to just differentiate once to find optima. You may need to differentiate twice to classify the critical points.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
 <section id="curvature" class="slide level2">
 <h2>Curvature</h2>
-<div id="def-curvature" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2</strong></span> Let <span class="math inline">\(\mathcal C_x\)</span> denote the <em>osculating circle</em> at <span class="math inline">\(x\)</span> with centre <span class="math inline">\(c\)</span> and radius <span class="math inline">\(r\)</span>, i.e.&nbsp;the circle that best approximates the graph of <span class="math inline">\(f\)</span> at <span class="math inline">\(x\)</span>. The curvature <span class="math inline">\(\kappa\)</span> for a graph of a function <span class="math inline">\(f\)</span> at a point <span class="math inline">\(x\)</span> is defined as <span class="math inline">\(\kappa = \frac{1}{r}\)</span>.</p>
-</div>
+<p>Let <span class="math inline">\(\mathcal C_x\)</span> denote the <em>osculating circle</em> at <span class="math inline">\(x\)</span> with centre <span class="math inline">\(c\)</span> and radius <span class="math inline">\(r\)</span>, i.e.&nbsp;the circle that best approximates the graph of <span class="math inline">\(f\)</span> at <span class="math inline">\(x\)</span>. Historically, the curvature <span class="math inline">\(\kappa\)</span> for a graph of a function <span class="math inline">\(f\)</span> at a point <span class="math inline">\(x\)</span> is measured as <span class="math inline">\(\kappa = \frac{1}{r}\)</span>.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -388,7 +484,7 @@ f'(x) = -12x^3 + 12x^2 + 24x &amp;= 0 \\
 <section id="curvature-and-concavity" class="slide level2">
 <h2>Curvature and concavity</h2>
 <div id="def-curvature-alt" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 3 (Curvature)</strong></span> The (signed) curvature for a graph <span class="math inline">\(y=f(x)\)</span> is <span class="math display">\[
+<p><span class="theorem-title"><strong>Definition 2 (Curvature)</strong></span> The (signed) curvature for a graph <span class="math inline">\(y=f(x)\)</span> is <span class="math display">\[
 \kappa = \frac{f''(x)}{\big(1 + [f'(x)]^2\big)^{3/2}}.
 \]</span></p>
 </div>
@@ -406,12 +502,6 @@ f'(x) = -12x^3 + 12x^2 + 24x &amp;= 0 \\
 </ul></li>
 <li><p>For reference, a straight line has zero curvature.</p></li>
 </ul>
-<!-- ```{r} -->
-<!-- #| fig-width: 7 -->
-<!-- #| fig-height: 3 -->
-<!-- #| out-width: 100% -->
-<!-- #| label: curvature-concav -->
-<!-- ``` -->
 </section>
 <section id="summary-so-far" class="slide level2">
 <h2>Summary so far</h2>
@@ -462,6 +552,8 @@ f'(x) = -12x^3 + 12x^2 + 24x &amp;= 0 \\
 <li><p>How do I objectively decide which value is better?</p></li>
 </ul>
 <p><img data-src="figures/bentcoin.png" class="absolute" style="top: 200px; right: 10px; width: 220px; "></p>
+<div class="fragment">
+<div class="nudge-up">
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -475,6 +567,8 @@ f'(x) = -12x^3 + 12x^2 + 24x &amp;= 0 \\
 </div>
 </div>
 </div>
+</div>
+</div>
 </section>
 <section id="a-probabilistic-model" class="slide level2">
 <h2>A probabilistic model</h2>
@@ -485,9 +579,12 @@ X_i = \begin{cases}
 \end{cases}
 \]</span> This is known as a <strong>Bernoulli</strong> random variable.</p>
 <div class="fragment">
-<p>Suppose that <span class="math inline">\(X=X_1 + \dots + X_n\)</span> — i.e.&nbsp;we are counting the number of heads in <span class="math inline">\(n\)</span> tossess — then this becomes a <strong>binomial</strong> random variable. We write <span class="math inline">\(X \sim \operatorname{Bin}(n, p)\)</span>, and the <em>probability mass function</em> is given by <span class="math display">\[
+<p>Suppose that <span class="math inline">\(X=X_1 + \dots + X_n\)</span>. So we are counting the number of heads in <span class="math inline">\(n\)</span> tossess. Then this becomes a <strong>binomial</strong> random variable. We write <span class="math inline">\(X \sim \operatorname{Bin}(n, p)\)</span>, and the <em>probability mass function</em> is given by <span class="math display">\[
 f(x \mid p) = \Pr(X = x) = \binom{n}{x} p^x (1 - p)^{n - x}, \quad x = 0, 1, \ldots, n.
 \]</span></p>
+<div class="nudge-up-medium">
+<p><span class="ubdgrey">Often we might want to find quantities such as <span class="math inline">\(\operatorname{E}(X)=np\)</span> and <span class="math inline">\(\operatorname{Var}(X)=np(1-p)\)</span>, but we will not go into details here.</span></p>
+</div>
 </div>
 </section>
 <section id="learning-from-data" class="slide level2">
@@ -505,22 +602,26 @@ f(x \mid p) = \Pr(X = x) = \binom{n}{x} p^x (1 - p)^{n - x}, \quad x = 0, 1, \ld
 </div>
 </div>
 </div>
+<div class="fragment">
 <p>Naturally, you go ahead and collect data by tossing it <span class="math inline">\(n=10\)</span> times. The outcome happens to be <span class="math display">\[
 H, H, H, T, T, H, H, T, H, H
 \]</span> There is a total of <span class="math inline">\(X=7\)</span> heads, and from this you surmise that (at least) the coin is <em>unlikely</em> to be fair, because:</p>
+<div class="nudge-down-small">
 <ul>
 <li>If <span class="math inline">\(p=0.5\)</span>, then <span class="math inline">\(\Pr(X=7 \mid p = 0.7) = \binom{10}{7} (0.5)^7 (0.5)^3 = 0.117\)</span>.</li>
 <li>If <span class="math inline">\(p=0.7\)</span>, then <span class="math inline">\(\Pr(X=7 \mid p = 0.5) = \binom{10}{7} (0.7)^7 (0.3)^3 = 0.267\)</span>.</li>
 <li>If <span class="math inline">\(p=0.9\)</span>, then <span class="math inline">\(\Pr(X=7 \mid p = 0.9) = \binom{10}{7} (0.9)^7 (0.1)^3 = 0.057\)</span>.</li>
 </ul>
-<div class="nudge-up-large">
+</div>
+<div class="nudge-up-medium">
 <p>How to formalise this idea?</p>
+</div>
 </div>
 </section>
 <section id="the-likelihood-function" class="slide level2">
 <h2>The likelihood function</h2>
 <div id="def-likelihood" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 4</strong></span> Given a probability function <span class="math inline">\(x \mapsto f(x\mid\theta)\)</span> where <span class="math inline">\(x\)</span> is a realisation of a random variable <span class="math inline">\(X\)</span>, the <em>likelihood function</em> is <span class="math inline">\(\theta \mapsto f(x\mid\theta)\)</span>, often written <span class="math inline">\(\mathcal L(\theta) = f(x \mid \theta)\)</span>.</p>
+<p><span class="theorem-title"><strong>Definition 3</strong></span> Given a probability function <span class="math inline">\(x \mapsto f(x\mid\theta)\)</span> where <span class="math inline">\(x\)</span> is a realisation of a random variable <span class="math inline">\(X\)</span>, the <em>likelihood function</em> is <span class="math inline">\(\theta \mapsto f(x\mid\theta)\)</span>, often written <span class="math inline">\(\mathcal L(\theta) = f(x \mid \theta)\)</span>.</p>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -592,7 +693,9 @@ H, H, H, T, T, H, H, T, H, H
 </section>
 <section id="example-normal-mean" class="slide level2">
 <h2>Example (Normal mean)</h2>
-<p>Suppose we observe <span class="math inline">\(X_1, \ldots, X_n\)</span> from a normal distribution with unknown mean <span class="math inline">\(\mu\)</span> and known variance <span class="math inline">\(\sigma^2\)</span>. The log-likelihood function is given by <span class="math display">\[
+<p>Suppose we observe <span class="math inline">\(X_1, \ldots, X_n\)</span> from a normal distribution with unknown mean <span class="math inline">\(\mu\)</span> and known variance <span class="math inline">\(\sigma^2\)</span>. The log-likelihood function is given by</p>
+<div class="fragment">
+<p><span class="math display">\[
 \begin{align*}
 \ell(\mu) &amp;= \sum_{i=1}^n \log f(X_i \mid \mu) \\
 &amp;= \sum_{i=1}^n \log \left( \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(X_i - \mu)^2}{2\sigma^2}} \right) \\
@@ -600,10 +703,13 @@ H, H, H, T, T, H, H, T, H, H
 &amp;= -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^n (X_i - \mu)^2.
 \end{align*}
 \]</span></p>
+</div>
 </section>
 <section id="example-normal-mean-cont." class="slide level2">
 <h2>Example (Normal mean, cont.)</h2>
-<p>To find the MLE of <span class="math inline">\(\mu\)</span>, we differentiate the log-likelihood function with respect to <span class="math inline">\(\mu\)</span> and set it to zero: <span class="math display">\[
+<p>To find the MLE of <span class="math inline">\(\mu\)</span>, we differentiate the log-likelihood function with respect to <span class="math inline">\(\mu\)</span> and set it to zero:</p>
+<div class="fragment">
+<p><span class="math display">\[
 \begin{align*}
 \frac{d}{d\mu} \ell(\mu) &amp;= -\frac{1}{2\sigma^2} \cdot 2 \sum_{i=1}^n (X_i - \mu)(-1) \\
 &amp;= \frac{1}{\sigma^2} \sum_{i=1}^n (X_i - \mu) = 0 \\
@@ -612,6 +718,7 @@ H, H, H, T, T, H, H, T, H, H
 \end{align*}
 \]</span></p>
 <p>Thus, the MLE for <span class="math inline">\(\mu\)</span> is <span class="math inline">\(\hat\mu = \bar X = \frac{1}{n} \sum_{i=1}^n X_i\)</span>.</p>
+</div>
 </section>
 <section id="a-real-data-example" class="slide level2">
 <h2>A real data example</h2>
@@ -638,12 +745,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>254 242 367 310 347 197 173 220 166 309 287 ...</code></pre>
+<pre><code>209 290 188 432 305 190 321 346 330 241 423 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 271.8\)</span></p>
+<p><span class="math inline">\(\bar X = 282.0\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -660,12 +767,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>398 80 370 273 289 414 214 303 100 201 351 ...</code></pre>
+<pre><code>312 211 306 159 415 470 235 168 329 258 512 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 270.7\)</span></p>
+<p><span class="math inline">\(\bar X = 283.7\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -682,12 +789,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>239 285 191 324 293 189 196 237 227 67 336 ...</code></pre>
+<pre><code>210 276 181 288 207 449 344 363 310 440 208 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 279.0\)</span></p>
+<p><span class="math inline">\(\bar X = 256.8\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -704,12 +811,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>231 334 166 99 319 356 280 324 392 337 199 ...</code></pre>
+<pre><code>317 270 240 179 123 164 372 210 134 459 315 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 285.5\)</span></p>
+<p><span class="math inline">\(\bar X = 279.7\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -726,12 +833,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>183 202 156 465 349 441 368 219 199 387 306 ...</code></pre>
+<pre><code>313 441 431 239 43 522 339 326 271 323 256 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 280.7\)</span></p>
+<p><span class="math inline">\(\bar X = 268.9\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -780,22 +887,38 @@ H, H, H, T, T, H, H, T, H, H
 </div>
 </div>
 </section>
+<section id="averaging-hypothetical-likelihoods-cont." class="slide level2">
+<h2>Averaging (hypothetical) likelihoods, cont.</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="fisher-information" class="slide level2">
 <h2>Fisher information</h2>
 <div id="def-fisher-info" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 5 (Fisher information)</strong></span> Under certain regularity conditions, the Fisher information is defined as <span class="math display">\[
+<p><span class="theorem-title"><strong>Definition 4 (Fisher information)</strong></span> Under certain regularity conditions, the Fisher information is defined as <span class="math display">\[
 \mathcal I(\theta) = -\operatorname{E}\left[\frac{d^2}{d\theta^2} \ell(\theta)\right].
 \]</span></p>
 </div>
-<p>So, it seems the Fisher information is <strong>inversely</strong> proportional to the <em>curvature of the (log)-likelihood function</em>.</p>
+<div class="fragment">
+<p>Evidently the Fisher information is <strong>proportional</strong> to the <em>curvature of the (log)-likelihood function</em>.</p>
 <blockquote>
-<p>🧠 INTUITION: Large curvature =&gt; Harder to find the optimum =&gt; Less information about the parameter =&gt; More uncertainty!</p>
+<p>🧠 INTUITION: Stronger curvature → Easier to find optima → More information about the parameter → Less uncertainty (and vice versa)</p>
 </blockquote>
 <p>Extension of the concepts of “curvature” to the case of <strong>random outcomes</strong>!</p>
+</div>
 </section>
 <section id="example-normal-mean-fisher-information" class="slide level2">
 <h2>Example (Normal mean Fisher information)</h2>
-<p>For the normal mean example, we have <span class="math inline">\(\ell'(\mu) = \frac{1}{\sigma^2}\sum_{i=1}^n (X_i-\mu)\)</span>. Thus, <span class="math display">\[
+<p>For the normal mean example, we have <span class="math inline">\(\ell'(\mu) = \frac{1}{\sigma^2}\sum_{i=1}^n (X_i-\mu)\)</span>. Thus,</p>
+<div class="fragment">
+<p><span class="math display">\[
 \begin{aligned}
 \ell''(\mu) = \frac{d^2\ell}{d\mu^2}(\mu)
 &amp;= \frac{d}{d\mu} \left[ \frac{1}{\sigma^2}\sum_{i=1}^n (X_i-\mu) \right] \\
@@ -804,6 +927,7 @@ H, H, H, T, T, H, H, T, H, H
 \]</span> Therefore, the Fisher information is <span class="math display">\[
 \mathcal I(\mu) = -\operatorname{E}\left[\ell''(\mu)\right] = \frac{n}{\sigma^2}.
 \]</span> We can improve the estimate of <span class="math inline">\(\mu\)</span> by increasing the sample size <span class="math inline">\(n\)</span>!</p>
+</div>
 </section>
 <section id="large-information-n1000" class="slide level2">
 <h2>Large information (<span class="math inline">\(n=1000\)</span>)</h2>
@@ -811,7 +935,7 @@ H, H, H, T, T, H, H, T, H, H
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" style="width:100.0%"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -828,7 +952,7 @@ H, H, H, T, T, H, H, T, H, H
 <p><span class="theorem-title"><strong>Example 3 (Estimating failure rate of a machine component)</strong></span> Suppose we collect data on how long (in hours) a machine component lasts before it fails. This could be a valve in a chemical plant, a sensor in a civil engineering structure, or a server part in a data centre.</p>
 </div>
 <div class="fragment fade-out" data-fragment-index="1">
-<p><img data-src="figures/cogs.gif" class="absolute" style="left: 300px; width: 40%; "></p>
+<p><img data-src="figures/cogs.gif" class="absolute" style="left: 330px; width: 40%; "></p>
 </div>
 <div class="fragment fade-in" data-fragment-index="1">
 <div class="nudge-up-medium">
@@ -841,7 +965,9 @@ f(x \mid \lambda) = \lambda e^{-\lambda x}, \quad x &gt; 0
 </section>
 <section id="exponential-waiting-time-cont." class="slide level2">
 <h2>Exponential waiting time (cont.)</h2>
-<p>Let <span class="math inline">\(X_1,\dots,X_n\)</span> be the observed failure times. The log-likelihood function is given by <span class="math display">\[
+<p>Let <span class="math inline">\(X_1,\dots,X_n\)</span> be the observed failure times. The log-likelihood function is given by</p>
+<div class="fragment">
+<p><span class="math display">\[
 \begin{aligned}
 \ell(\lambda)
 = \log \left[ \prod_{i=1}^n f(X_i \mid \lambda) \right]
@@ -850,6 +976,7 @@ f(x \mid \lambda) = \lambda e^{-\lambda x}, \quad x &gt; 0
 &amp;= n \log \lambda - \lambda \sum_{i=1}^n X_i.
 \end{aligned}
 \]</span></p>
+</div>
 </section>
 <section id="exponential-waiting-time-cont.-1" class="slide level2">
 <h2>Exponential waiting time (cont.)</h2>
@@ -959,32 +1086,9 @@ f(x \mid \lambda) = \lambda e^{-\lambda x}, \quad x &gt; 0
 </section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>
-<ul>
-<li>Learn from data</li>
-<li>Involves calculus!</li>
-<li>Calculus is not just background math—it’s the <strong>engine</strong> of statistical theory.</li>
-<li>Beyond undergraduate stats: everything from MLE, Bayesian posteriors, to machine learning involves gradients and Hessians. Suggest: for students who love math but unsure about statistics—you are the kind of person statistics needs.</li>
-</ul>
-</section>
-<section id="probability-vs-statistics" class="slide level2">
-<h2>Probability vs statistics</h2>
 <p>Given a model, probability allows us to <em>predict</em> data. Statistics on the other hand, allows us to <em>learn</em> from data.</p>
 <div class="columns">
 <div class="column" style="width:48%;">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-17-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<ul>
-<li>What is <span class="math inline">\(\Pr(X &gt; a)\)</span>?</li>
-<li>What is <span class="math inline">\(\operatorname{E}(X)\)</span>?</li>
-</ul>
-</div><div class="column" style="width:48%;">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -994,22 +1098,69 @@ f(x \mid \lambda) = \lambda e^{-\lambda x}, \quad x &gt; 0
 </div>
 </div>
 </div>
-<ul>
-<li>What is <span class="math inline">\(\theta\)</span>?</li>
-<li>Is <span class="math inline">\(\theta\)</span> larger than <span class="math inline">\(\theta_0\)</span>?</li>
-<li>How confident am I that <span class="math inline">\(\theta \in (\theta_l,\theta_u)\)</span>?</li>
-</ul>
+</div><div class="column" style="width:48%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-19-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 </div></div>
+<div class="fragment">
+<ul>
+<li>Calculus plays a central role:
+<ul>
+<li>Finding the <strong>Maximum Likelihood Estimator (MLE)</strong></li>
+<li>Understanding <strong>Fisher Information</strong> and curvature</li>
+<li>Uncovering role of sample size in estimation uncertainty</li>
+</ul></li>
+<li>Calculus is not just background math—it’s the <strong>engine</strong> driving statistical theory.</li>
+</ul>
+</div>
 </section>
 <section id="where-to-go-from-here" class="slide level2">
 <h2>Where to go from here</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>🌐 <strong>Numerical derivatives</strong> — how computers approximate calculus</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>fun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) x <span class="sc">^</span> <span class="dv">2</span></span>
+<span id="cb7-2"><a href=""></a>numDeriv<span class="sc">::</span><span class="fu">grad</span>(fun, <span class="at">x =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+</div>
+<div class="nudge-down-small">
+<p>🚀 Modern statistics tackles:</p>
 <ul>
-<li>Numerical derivatives and specialised software</li>
-<li>Bimodal distributions (not easy)</li>
-<li>Interesting challenges in modern statistics include big data, high-dimensional data, and complex models.</li>
+<li><strong>Big data</strong> (too much)</li>
+<li><strong>High-dimensional data</strong> (too many variables)</li>
+<li><strong>Complex models</strong> (real-world messiness)</li>
 </ul>
-
+</div>
+</div><div class="column" style="width:50%;">
+<p>🧠 <strong>Bimodal and non-standard distributions</strong> when simple models break</p>
+</div></div>
+<div class="absolute" style="bottom: 50px; right: -300px; ">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/mleunique-1.png" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
 </section></section>
+<section id="thanks" class="title-slide slide level1 transition-slide-ubdrubydeep center">
+<h1>Thanks!</h1>
+<p><a href="https://haziqj.ml/"><code>https://haziqj.ml/</code></a></p>
+
+</section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <p><img src="_extensions/haziqj/ubd40/ubd_brand_logo_40.png" class="slide-logo"></p>
