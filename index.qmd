@@ -548,82 +548,391 @@ $\mathcal L(\theta) = f(x \mid \theta)$.
 #| fig-height: 3
 #| fig-width: 7
 
-x <- seq(0, 1, by = 0.01)
-y <- dbinom(7, size = 10, x)
-
-ggplot(data.frame(x = x, y = y), aes(x, y)) +
+plot_binom_lik <- function(nheads) {
+  
+  x <- seq(0, 1, by = 0.01)
+  y <- dbinom(nheads, size = 10, x)
+  
+  ggplot(data.frame(x = x, y = y), aes(x, y)) +
   geom_line() +
   scale_x_continuous(breaks = seq(0, 1, by = 0.1)) +
-  labs(x = "Probability of heads, p", y = "L(p|x)",
-       subtitle = "Likelihood of Bin(10,p) given fixed data X=7") +
   theme_bw()
+}
+
+plot_binom_lik(7) + 
+  labs(x = "Probability of heads, p", y = "L(p|x)",
+       subtitle = "Likelihood of Bin(10,p) given fixed data X=7") 
 ```
 
 
+## Parameteric statistical models
 
+Assume that $X_i \sim f(x \mid \theta)$ independently for $i = 1, \ldots, n$.
+Here, functional form of $f$ is known, but the parameter $\theta$ is unknown. Examples:
 
-
-## The (parametric) statistical model
-
-Assume that each observation $X_i$ is generated from a *probability function* $f$, i.e.
-$$
-X_i \sim f(x \mid \theta), \quad i = 1, \ldots, n.
-$$
-
-Furthermore,
-
-1. Each observation $X_i$ is independent of the others.
-2. The functional form of $f$ is known.
-3. $\theta$ is the [unknown]{.uline} *parameter* that characterises the distribution $f$.
-
-In other words, the parameter $\theta$ is all that is needed to know about the distribution of $X_i$.
-
-## Examples of parameteric models
-
-::: {.nudge-down-xl}
 | Name        | $f(x \mid \theta)$                                                   | $\theta$                                | Remarks                          |
 |-------------|----------------------------------------------------------------------|------------------------------------------|----------------------------------|
 | Binomial    | $\binom{n}{x} p^x (1 - p)^{n - x}$                                   | $p \in (0, 1)$        | No. successes in $n$ trials        |
-| Poisson     | $\frac{\lambda^x e^{-\lambda}}{x!}$                                  | $\lambda > 0$                            | Count data (events per interval) |
+| Poisson     | $\frac{\lambda^x e^{-\lambda}}{x!}$                                  | $\lambda > 0$                            | Count data  |
 | Uniform     | $\frac{1}{b - a}$ for $x \in [a, b]$                                 | $a < b$                                  | Equally likely outcomes     |
 | Exponential | $\lambda e^{-\lambda x}$ for $x \geq 0$                              | $\lambda > 0$                            | Waiting time        |
 | Normal      | $\frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x - \mu)^2}{2\sigma^2}\right)$ | $\mu \in \mathbb{R},\ \sigma^2 > 0$ | Bell curve       |
 |   |   |   |
 : {.table-ubd}
+
+
+## Example (Normal mean)
+
+Suppose we observe $X_1, \ldots, X_n$ from a normal distribution with unknown mean $\mu$ and known variance $\sigma^2$.
+The log-likelihood function is given by
+$$
+\begin{align*}
+\ell(\mu) &= \sum_{i=1}^n \log f(X_i \mid \mu) \\
+&= \sum_{i=1}^n \log \left( \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(X_i - \mu)^2}{2\sigma^2}} \right) \\
+&= \sum_{i=1}^n \left\{ -\frac{1}{2} \log(2\pi\sigma^2) - \frac{(X_i - \mu)^2}{2\sigma^2} \right\} \\
+&= -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^n (X_i - \mu)^2.
+\end{align*}
+$$
+
+## Example (Normal mean, cont.)
+
+To find the MLE of $\mu$, we differentiate the log-likelihood function with respect to $\mu$ and set it to zero:
+$$
+\begin{align*}
+\frac{d}{d\mu} \ell(\mu) &= -\frac{1}{2\sigma^2} \cdot 2 \sum_{i=1}^n (X_i - \mu)(-1) \\
+&= \frac{1}{\sigma^2} \sum_{i=1}^n (X_i - \mu) = 0 \\
+&\Leftrightarrow \sum_{i=1}^n X_i - n\mu = 0 
+\Leftrightarrow \mu = \frac{1}{n} \sum_{i=1}^n X_i.
+\end{align*}
+$$
+
+Thus, the MLE for $\mu$ is $\hat\mu = \bar X = \frac{1}{n} \sum_{i=1}^n X_i$.
+
+## A real data example
+
+::: {#exm-house-price}
+Sample $n=50$ house prices randomly in Brunei.
 :::
 
-## Effect of parameterisation
+```{r}
+#| message: false
+#| warning: false
+#| out-width: 100%
+#| fig-height: 3.7
+#| fig-width: 8
+library(tidyverse)
+set.seed(NULL)
+n <- 50
+mu <- 272
+sigma <- 100
+x <- rnorm(n, mean = mu, sd = sigma)
+loglik <- function(mu, X = x) {
+  sum(dnorm(X, mean = mu, sd = sigma, log = TRUE))
+}
 
-```{=html}
-<div id="desmos-normal" style="position: relative; width: 100%; height: 88%;"></div>
+xmin <- min(x)
+xmax <- max(x)
 
-<script>
-  var elt = document.getElementById("desmos-normal");
-  var calculator = Desmos.GraphingCalculator(elt, {
-    expressions: true,
-    settingsMenu: false,
-    zoomButtons: true
-  });
+# Boxplot of sample data
+p1 <-
+  ggplot(tibble(x, y = 0), aes(x, y)) +
+  geom_boxplot() +
+  geom_jitter(size = 1.5, alpha = 0.5, height = 0.1) +
+  annotate("point", x = mean(x), y = 0, size = 3, colour = "red3") +
+  geom_vline(xintercept = mean(x), linetype = "dashed", colour = "red3") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-1, 1), xlim = c(xmin, xmax)) +
+  theme(axis.text.y= element_blank(), axis.ticks.y = element_blank(),
+        axis.text.x = element_blank(), panel.grid.major.y = element_blank(), 
+        panel.grid.minor.y = element_blank()) +
+  labs(y = NULL, x = NULL, subtitle = "Sampling distribution of data")
 
-  calculator.setExpressions([
-    { id: 'mu', latex: '\\mu = 0', sliderBounds: { min: -5, max: 5 } },
-    { id: 'sigma', latex: '\\sigma = 1', sliderBounds: { min: 0.5, max: 3 } },
-    { id: 'f', latex: 'f(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} e^{-\\frac{(x - \\mu)^2}{2\\sigma^2}}' },
-    { id: 'graph', latex: 'y = f(x)', color: Desmos.Colors.BLUE }
-  ]);
+# Likelihood function
+p2 <- tibble(
+    xx = seq(xmin, xmax, length.out = 200),
+    # yy = unlist(map(xx, \(z) sum(dnorm(z, mean = mean(x), sd = 1, log = TRUE))))
+  ) |>
+  rowwise() |>
+  mutate(yy = loglik(xx)) |>
+  ggplot(aes(xx, yy)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = mean(x), linetype = "dashed", colour = "red3") +
+  coord_cartesian(xlim = c(xmin, xmax)) +
+  labs(x = "Price (BND 100k)", y = "Log-likelihood") +
+  theme_minimal() 
 
-  calculator.setMathBounds({
-    left: -8,
-    right: 8,
-    bottom: -0.05,
-    top: 0.5
-  });
-</script>
+# cowplot::plot_grid(p1, p2, ncol = 1)
+library(patchwork)
+p1 / p2 + plot_layout(heights = c(0.5, 1))
 ```
 
-## When we only have data...
 
-### Probability vs statistics
+::: aside
+HJ (2025). A spatio-temporal analysis of house prices in Brunei Darussalam. *Qual Quant*, 1-32. DOI: [10.1007/s11135-025-02164-0](https://doi.org/10.1007/s11135-025-02164-0).
+:::
+
+
+## But wait, the sample was random...
+
+::: {.columns}
+
+::: {.column width=30%}
+::: {.nudge-down}
+```{r}
+x <- rnorm(n, mean = mu, sd = sigma)
+cat(head(round(x), 11), "...")
+```
+:::
+:::
+
+::: {.column width=20%}
+$\bar X = `r iprior::dec_plac(mean(x), 1)`$
+:::
+
+::: {.column width=50%}
+```{r}
+#| out-width: 100%
+#| fig-height: 0.85
+#| fig-width: 5
+tibble(xx = seq(170, 370, length.out = 200)) |>
+  rowwise() |>
+  mutate(yy = loglik(xx)) |>
+  ggplot(aes(xx, yy)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = mean(x), linetype = "dashed", colour = "red3") +
+  coord_cartesian(xlim = c(170, 370)) +
+  labs(x = NULL, y = "Likelihood") +
+  theme_classic() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+```
+:::
+
+:::
+
+
+
+::: {.columns}
+
+::: {.column width=30%}
+::: {.nudge-down}
+```{r}
+x <- rnorm(n, mean = mu, sd = sigma)
+cat(head(round(x), 11), "...")
+```
+:::
+:::
+
+::: {.column width=20%}
+$\bar X = `r iprior::dec_plac(mean(x), 1)`$
+:::
+
+::: {.column width=50%}
+```{r}
+#| out-width: 100%
+#| fig-height: 0.85
+#| fig-width: 5
+tibble(xx = seq(170, 370, length.out = 200)) |>
+  rowwise() |>
+  mutate(yy = loglik(xx)) |>
+  ggplot(aes(xx, yy)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = mean(x), linetype = "dashed", colour = "red3") +
+  coord_cartesian(xlim = c(170, 370)) +
+  labs(x = NULL, y = "Likelihood") +
+  theme_classic() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+```
+:::
+
+:::
+
+
+::: {.columns}
+
+::: {.column width=30%}
+::: {.nudge-down}
+```{r}
+x <- rnorm(n, mean = mu, sd = sigma)
+cat(head(round(x), 11), "...")
+```
+:::
+:::
+
+::: {.column width=20%}
+$\bar X = `r iprior::dec_plac(mean(x), 1)`$
+:::
+
+::: {.column width=50%}
+```{r}
+#| out-width: 100%
+#| fig-height: 0.85
+#| fig-width: 5
+tibble(xx = seq(170, 370, length.out = 200)) |>
+  rowwise() |>
+  mutate(yy = loglik(xx)) |>
+  ggplot(aes(xx, yy)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = mean(x), linetype = "dashed", colour = "red3") +
+  coord_cartesian(xlim = c(170, 370)) +
+  labs(x = NULL, y = "Likelihood") +
+  theme_classic() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+```
+:::
+
+:::
+
+
+
+::: {.columns}
+
+::: {.column width=30%}
+::: {.nudge-down}
+```{r}
+x <- rnorm(n, mean = mu, sd = sigma)
+cat(head(round(x), 11), "...")
+```
+:::
+:::
+
+::: {.column width=20%}
+$\bar X = `r iprior::dec_plac(mean(x), 1)`$
+:::
+
+::: {.column width=50%}
+```{r}
+#| out-width: 100%
+#| fig-height: 0.85
+#| fig-width: 5
+tibble(xx = seq(170, 370, length.out = 200)) |>
+  rowwise() |>
+  mutate(yy = loglik(xx)) |>
+  ggplot(aes(xx, yy)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = mean(x), linetype = "dashed", colour = "red3") +
+  coord_cartesian(xlim = c(170, 370)) +
+  labs(x = NULL, y = "Likelihood") +
+  theme_classic() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+```
+:::
+
+:::
+
+
+
+::: {.columns}
+
+::: {.column width=30%}
+::: {.nudge-down}
+```{r}
+x <- rnorm(n, mean = mu, sd = sigma)
+cat(head(round(x), 11), "...")
+```
+:::
+:::
+
+::: {.column width=20%}
+$\bar X = `r iprior::dec_plac(mean(x), 1)`$
+:::
+
+::: {.column width=50%}
+```{r}
+#| out-width: 100%
+#| fig-height: 0.85
+#| fig-width: 5
+tibble(xx = seq(170, 370, length.out = 200)) |>
+  rowwise() |>
+  mutate(yy = loglik(xx)) |>
+  ggplot(aes(xx, yy)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = mean(x), linetype = "dashed", colour = "red3") +
+  coord_cartesian(xlim = c(170, 370)) +
+  labs(x = NULL, y = "Likelihood") +
+  theme_classic() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+```
+:::
+
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ## Effect of parameterisation -->
+
+<!-- ```{=html} -->
+<!-- <div id="desmos-normal" style="position: relative; width: 100%; height: 88%;"></div> -->
+
+<!-- <script> -->
+<!--   var elt = document.getElementById("desmos-normal"); -->
+<!--   var calculator = Desmos.GraphingCalculator(elt, { -->
+<!--     expressions: true, -->
+<!--     settingsMenu: false, -->
+<!--     zoomButtons: true -->
+<!--   }); -->
+
+<!--   calculator.setExpressions([ -->
+<!--     { id: 'mu', latex: '\\mu = 0', sliderBounds: { min: -5, max: 5 } }, -->
+<!--     { id: 'sigma', latex: '\\sigma = 1', sliderBounds: { min: 0.5, max: 3 } }, -->
+<!--     { id: 'f', latex: 'f(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} e^{-\\frac{(x - \\mu)^2}{2\\sigma^2}}' }, -->
+<!--     { id: 'graph', latex: 'y = f(x)', color: Desmos.Colors.BLUE } -->
+<!--   ]); -->
+
+<!--   calculator.setMathBounds({ -->
+<!--     left: -8, -->
+<!--     right: 8, -->
+<!--     bottom: -0.05, -->
+<!--     top: 0.5 -->
+<!--   }); -->
+<!-- </script> -->
+<!-- ``` -->
+
+
+
+## Combining hypothetical likelihoods
+
+```{r}
+B <- 100
+X <- rbinom(B, size = 10, prob = 0.7)
+xx <- seq(0.5, 0.9, length.out = 100)
+tibble(
+  b = seq_len(B),
+  X = X,
+  x = list(xx)
+) |>
+  mutate(L = map(X, \(x) dbinom(x, size = 10, prob = xx))) |>
+  unnest(x, L) |>
+  ggplot(aes(x, L, group = b)) +
+  geom_line(alpha = 0.1) +
+  theme_minimal()
+```
+
+
+## Probability vs statistics
 
 
 Given a model, probability allows us to *predict* data.
@@ -691,106 +1000,7 @@ Statistics on the other hand, allows us to *learn* from data.
 :::
 
 
-## The likelihood function
 
-::: {#def-likelihood}
-The likelihood function is defined as the joint probability of the data $\mathbf X = (X_1,\dots,X_n)^\top$ given the parameter $\theta$, i.e.
-$$
-L(\theta) = \Pr(\mathbf X \mid \theta) = \prod_{i=1}^n f(X_i \mid \theta).
-$$
-The log-likelihood is just the logarithm of the likelihood function:
-$$
-\ell(\theta) = \log L(\theta) = \sum_{i=1}^n \log f(X_i \mid \theta).
-$$
-:::
-
-The (log-)likelihood function tells us how plausible different values of the parameter $\theta$ are given the observed data $\mathbf X$.
-
-
-## Example (Normal mean)
-
-Suppose we observe $X_1, \ldots, X_n$ from a normal distribution with unknown mean $\mu$ and known variance $\sigma^2$.
-The log-likelihood function is given by
-$$
-\begin{align*}
-\ell(\mu) &= \sum_{i=1}^n \log f(X_i \mid \mu) \\
-&= \sum_{i=1}^n \log \left( \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(X_i - \mu)^2}{2\sigma^2}} \right) \\
-&= \sum_{i=1}^n \left\{ -\frac{1}{2} \log(2\pi\sigma^2) - \frac{(X_i - \mu)^2}{2\sigma^2} \right\} \\
-&= -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^n (X_i - \mu)^2.
-\end{align*}
-$$
-
-## Example (Normal mean, cont.)
-
-To find the MLE of $\mu$, we differentiate the log-likelihood function with respect to $\mu$ and set it to zero:
-$$
-\begin{align*}
-\frac{d}{d\mu} \ell(\mu) &= -\frac{1}{2\sigma^2} \cdot 2 \sum_{i=1}^n (X_i - \mu)(-1) \\
-&= \frac{1}{\sigma^2} \sum_{i=1}^n (X_i - \mu) = 0 \\
-&\Leftrightarrow \sum_{i=1}^n X_i - n\mu = 0 
-\Leftrightarrow \mu = \frac{1}{n} \sum_{i=1}^n X_i.
-\end{align*}
-$$
-
-Thus, the MLE for $\mu$ is $\hat\mu = \bar X = \frac{1}{n} \sum_{i=1}^n X_i$.
-
-## Brunei house price data
-
-```{r}
-#| message: false
-#| warning: false
-#| out-width: 100%
-#| fig-height: 4.5
-#| fig-width: 8
-library(tidyverse)
-n <- 100
-mu <- 8
-x <- rnorm(n, mean = mu, sd = 1)
-loglik <- function(mu, X = x) {
-  sum(dnorm(X, mean = mu, sd = 1, log = TRUE))
-}
-
-xmin <- min(x)
-xmax <- max(x)
-
-# Boxplot of sample data
-p1 <-
-  ggplot(tibble(x, y = 0), aes(x, y)) +
-  geom_boxplot() +
-  geom_jitter(size = 1.5, alpha = 0.5, height = 0.1) +
-  annotate("point", x = mean(x), y = 0, size = 3, colour = "red3") +
-  geom_vline(xintercept = mean(x), linetype = "dashed", colour = "red3") +
-  theme_minimal() +
-  coord_cartesian(ylim = c(-1, 1), xlim = c(xmin, xmax)) +
-  theme(axis.text.y= element_blank(), axis.ticks.y = element_blank(),
-        axis.text.x = element_blank()) +
-  labs(y = NULL, x = NULL, subtitle = "Sampling distribution of data")
-
-# Likelihood function
-p2 <- tibble(
-    xx = seq(xmin, xmax, length.out = 200),
-    # yy = unlist(map(xx, \(z) sum(dnorm(z, mean = mean(x), sd = 1, log = TRUE))))
-  ) |>
-  rowwise() |>
-  mutate(yy = loglik(xx)) |>
-  ggplot(aes(xx, yy)) +
-  geom_line(size = 1) +
-  geom_vline(xintercept = mean(x), linetype = "dashed", colour = "red3") +
-  coord_cartesian(xlim = c(xmin, xmax)) +
-  labs(x = "x", y = "Log-likelihood") +
-  theme_minimal() 
-
-# cowplot::plot_grid(p1, p2, ncol = 1)
-library(patchwork)
-p1 / p2
-```
-
-
-## But wait, the sample was random...
-
-<Multiple samples, boxplot comparisons>
-
-## Effect of sampling variability on likelihood
 
 ## Fisher information 
 

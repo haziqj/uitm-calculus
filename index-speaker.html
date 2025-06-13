@@ -532,22 +532,9 @@ H, H, H, T, T, H, H, T, H, H
 </div>
 </div>
 </section>
-<section id="the-parametric-statistical-model" class="slide level2">
-<h2>The (parametric) statistical model</h2>
-<p>Assume that each observation <span class="math inline">\(X_i\)</span> is generated from a <em>probability function</em> <span class="math inline">\(f\)</span>, i.e. <span class="math display">\[
-X_i \sim f(x \mid \theta), \quad i = 1, \ldots, n.
-\]</span></p>
-<p>Furthermore,</p>
-<ol type="1">
-<li>Each observation <span class="math inline">\(X_i\)</span> is independent of the others.</li>
-<li>The functional form of <span class="math inline">\(f\)</span> is known.</li>
-<li><span class="math inline">\(\theta\)</span> is the <span class="uline">unknown</span> <em>parameter</em> that characterises the distribution <span class="math inline">\(f\)</span>.</li>
-</ol>
-<p>In other words, the parameter <span class="math inline">\(\theta\)</span> is all that is needed to know about the distribution of <span class="math inline">\(X_i\)</span>.</p>
-</section>
-<section id="examples-of-parameteric-models" class="slide level2">
-<h2>Examples of parameteric models</h2>
-<div class="nudge-down-xl">
+<section id="parameteric-statistical-models" class="slide level2">
+<h2>Parameteric statistical models</h2>
+<p>Assume that <span class="math inline">\(X_i \sim f(x \mid \theta)\)</span> independently for <span class="math inline">\(i = 1, \ldots, n\)</span>. Here, functional form of <span class="math inline">\(f\)</span> is known, but the parameter <span class="math inline">\(\theta\)</span> is unknown. Examples:</p>
 <table class="table-ubd caption-top">
 <colgroup>
 <col style="width: 8%">
@@ -574,7 +561,7 @@ X_i \sim f(x \mid \theta), \quad i = 1, \ldots, n.
 <td>Poisson</td>
 <td><span class="math inline">\(\frac{\lambda^x e^{-\lambda}}{x!}\)</span></td>
 <td><span class="math inline">\(\lambda &gt; 0\)</span></td>
-<td>Count data (events per interval)</td>
+<td>Count data</td>
 </tr>
 <tr class="odd">
 <td>Uniform</td>
@@ -602,81 +589,6 @@ X_i \sim f(x \mid \theta), \quad i = 1, \ldots, n.
 </tr>
 </tbody>
 </table>
-</div>
-</section>
-<section id="effect-of-parameterisation" class="slide level2">
-<h2>Effect of parameterisation</h2>
-<div id="desmos-normal" style="position: relative; width: 100%; height: 88%;"></div>
-
-<script>
-  var elt = document.getElementById("desmos-normal");
-  var calculator = Desmos.GraphingCalculator(elt, {
-    expressions: true,
-    settingsMenu: false,
-    zoomButtons: true
-  });
-
-  calculator.setExpressions([
-    { id: 'mu', latex: '\\mu = 0', sliderBounds: { min: -5, max: 5 } },
-    { id: 'sigma', latex: '\\sigma = 1', sliderBounds: { min: 0.5, max: 3 } },
-    { id: 'f', latex: 'f(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} e^{-\\frac{(x - \\mu)^2}{2\\sigma^2}}' },
-    { id: 'graph', latex: 'y = f(x)', color: Desmos.Colors.BLUE }
-  ]);
-
-  calculator.setMathBounds({
-    left: -8,
-    right: 8,
-    bottom: -0.05,
-    top: 0.5
-  });
-</script>
-</section>
-<section id="when-we-only-have-data" class="slide level2">
-<h2>When we only have data…</h2>
-<h3 id="probability-vs-statistics">Probability vs statistics</h3>
-<p>Given a model, probability allows us to <em>predict</em> data. Statistics on the other hand, allows us to <em>learn</em> from data.</p>
-<div class="columns">
-<div class="column" style="width:48%;">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<ul>
-<li>What is <span class="math inline">\(\Pr(X &gt; a)\)</span>?</li>
-<li>What is <span class="math inline">\(\operatorname{E}(X)\)</span>?</li>
-</ul>
-</div><div class="column" style="width:48%;">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<ul>
-<li>What is <span class="math inline">\(\theta\)</span>?</li>
-<li>Is <span class="math inline">\(\theta\)</span> larger than <span class="math inline">\(\theta_0\)</span>?</li>
-<li>How confident am I that <span class="math inline">\(\theta \in (\theta_l,\theta_u)\)</span>?</li>
-</ul>
-</div></div>
-</section>
-<section id="the-likelihood-function-1" class="slide level2">
-<h2>The likelihood function</h2>
-<div id="def-likelihood" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 5</strong></span> The likelihood function is defined as the joint probability of the data <span class="math inline">\(\mathbf X = (X_1,\dots,X_n)^\top\)</span> given the parameter <span class="math inline">\(\theta\)</span>, i.e. <span class="math display">\[
-L(\theta) = \Pr(\mathbf X \mid \theta) = \prod_{i=1}^n f(X_i \mid \theta).
-\]</span> The log-likelihood is just the logarithm of the likelihood function: <span class="math display">\[
-\ell(\theta) = \log L(\theta) = \sum_{i=1}^n \log f(X_i \mid \theta).
-\]</span></p>
-</div>
-<p>The (log-)likelihood function tells us how plausible different values of the parameter <span class="math inline">\(\theta\)</span> are given the observed data <span class="math inline">\(\mathbf X\)</span>.</p>
 </section>
 <section id="example-normal-mean" class="slide level2">
 <h2>Example (Normal mean)</h2>
@@ -701,8 +613,38 @@ L(\theta) = \Pr(\mathbf X \mid \theta) = \prod_{i=1}^n f(X_i \mid \theta).
 \]</span></p>
 <p>Thus, the MLE for <span class="math inline">\(\mu\)</span> is <span class="math inline">\(\hat\mu = \bar X = \frac{1}{n} \sum_{i=1}^n X_i\)</span>.</p>
 </section>
-<section id="brunei-house-price-data" class="slide level2">
-<h2>Brunei house price data</h2>
+<section id="a-real-data-example" class="slide level2">
+<h2>A real data example</h2>
+<div id="exm-house-price" class="theorem example">
+<p><span class="theorem-title"><strong>Example 2</strong></span> Sample <span class="math inline">\(n=50\)</span> house prices randomly in Brunei.</p>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+
+<aside><div>
+<p>HJ (2025). A spatio-temporal analysis of house prices in Brunei Darussalam. <em>Qual Quant</em>, 1-32. DOI: <a href="https://doi.org/10.1007/s11135-025-02164-0">10.1007/s11135-025-02164-0</a>.</p>
+</div></aside></section>
+<section id="but-wait-the-sample-was-random" class="slide level2">
+<h2>But wait, the sample was random…</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="nudge-down">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>124 280 423 370 201 488 207 236 258 299 364 ...</code></pre>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:20%;">
+<p><span class="math inline">\(\bar X = 263.0\)</span></p>
+</div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -712,13 +654,166 @@ L(\theta) = \Pr(\mathbf X \mid \theta) = \prod_{i=1}^n f(X_i \mid \theta).
 </div>
 </div>
 </div>
+</div></div>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="nudge-down">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>161 389 134 357 197 178 181 322 251 310 232 ...</code></pre>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:20%;">
+<p><span class="math inline">\(\bar X = 265.3\)</span></p>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="nudge-down">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>289 282 81 248 309 190 267 272 270 431 415 ...</code></pre>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:20%;">
+<p><span class="math inline">\(\bar X = 278.6\)</span></p>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-10-1.png" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="nudge-down">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>131 371 179 380 335 231 246 206 235 199 421 ...</code></pre>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:20%;">
+<p><span class="math inline">\(\bar X = 254.4\)</span></p>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="nudge-down">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>239 317 321 351 230 210 259 409 328 206 319 ...</code></pre>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:20%;">
+<p><span class="math inline">\(\bar X = 268.0\)</span></p>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<!-- ## Effect of parameterisation -->
+<!-- ```{=html} -->
+<!-- <div id="desmos-normal" style="position: relative; width: 100%; height: 88%;"></div> -->
+<!-- <script> -->
+<!--   var elt = document.getElementById("desmos-normal"); -->
+<!--   var calculator = Desmos.GraphingCalculator(elt, { -->
+<!--     expressions: true, -->
+<!--     settingsMenu: false, -->
+<!--     zoomButtons: true -->
+<!--   }); -->
+<!--   calculator.setExpressions([ -->
+<!--     { id: 'mu', latex: '\\mu = 0', sliderBounds: { min: -5, max: 5 } }, -->
+<!--     { id: 'sigma', latex: '\\sigma = 1', sliderBounds: { min: 0.5, max: 3 } }, -->
+<!--     { id: 'f', latex: 'f(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} e^{-\\frac{(x - \\mu)^2}{2\\sigma^2}}' }, -->
+<!--     { id: 'graph', latex: 'y = f(x)', color: Desmos.Colors.BLUE } -->
+<!--   ]); -->
+<!--   calculator.setMathBounds({ -->
+<!--     left: -8, -->
+<!--     right: 8, -->
+<!--     bottom: -0.05, -->
+<!--     top: 0.5 -->
+<!--   }); -->
+<!-- </script> -->
+<!-- ``` -->
 </section>
-<section id="but-wait-the-sample-was-random" class="slide level2">
-<h2>But wait, the sample was random…</h2>
-<p>&lt;Multiple samples, boxplot comparisons&gt;</p>
+<section id="combining-hypothetical-likelihoods" class="slide level2">
+<h2>Combining hypothetical likelihoods</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="effect-of-sampling-variability-on-likelihood" class="slide level2">
-<h2>Effect of sampling variability on likelihood</h2>
+<section id="probability-vs-statistics" class="slide level2">
+<h2>Probability vs statistics</h2>
+<p>Given a model, probability allows us to <em>predict</em> data. Statistics on the other hand, allows us to <em>learn</em> from data.</p>
+<div class="columns">
+<div class="column" style="width:48%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>What is <span class="math inline">\(\Pr(X &gt; a)\)</span>?</li>
+<li>What is <span class="math inline">\(\operatorname{E}(X)\)</span>?</li>
+</ul>
+</div><div class="column" style="width:48%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-17-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>What is <span class="math inline">\(\theta\)</span>?</li>
+<li>Is <span class="math inline">\(\theta\)</span> larger than <span class="math inline">\(\theta_0\)</span>?</li>
+<li>How confident am I that <span class="math inline">\(\theta \in (\theta_l,\theta_u)\)</span>?</li>
+</ul>
+</div></div>
 </section>
 <section id="fisher-information" class="slide level2">
 <h2>Fisher information</h2>
