@@ -638,12 +638,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>124 280 423 370 201 488 207 236 258 299 364 ...</code></pre>
+<pre><code>257 52 216 215 162 92 159 120 170 199 190 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 263.0\)</span></p>
+<p><span class="math inline">\(\bar X = 267.5\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -660,12 +660,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>161 389 134 357 197 178 181 322 251 310 232 ...</code></pre>
+<pre><code>371 326 214 78 226 380 264 287 432 259 324 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 265.3\)</span></p>
+<p><span class="math inline">\(\bar X = 294.3\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -682,12 +682,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>289 282 81 248 309 190 267 272 270 431 415 ...</code></pre>
+<pre><code>437 374 370 130 286 226 298 224 278 399 249 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 278.6\)</span></p>
+<p><span class="math inline">\(\bar X = 281.9\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -704,12 +704,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>131 371 179 380 335 231 246 206 235 199 421 ...</code></pre>
+<pre><code>148 275 432 144 273 316 207 222 326 204 245 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 254.4\)</span></p>
+<p><span class="math inline">\(\bar X = 273.3\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -726,12 +726,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>239 317 321 351 230 210 259 409 328 206 319 ...</code></pre>
+<pre><code>293 351 235 162 210 304 257 282 281 81 252 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 268.0\)</span></p>
+<p><span class="math inline">\(\bar X = 244.5\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -768,17 +768,59 @@ H, H, H, T, T, H, H, T, H, H
 <!-- </script> -->
 <!-- ``` -->
 </section>
-<section id="combining-hypothetical-likelihoods" class="slide level2">
-<h2>Combining hypothetical likelihoods</h2>
+<section id="averaging-hypothetical-likelihoods" class="slide level2">
+<h2>Averaging (hypothetical) likelihoods</h2>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/fishersamples-1.png" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
+</section>
+<section id="fisher-information" class="slide level2">
+<h2>Fisher information</h2>
+<div id="def-fisher-info" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 5 (Fisher information)</strong></span> Under certain regularity conditions, the Fisher information is defined as <span class="math display">\[
+\mathcal I(\theta) = -\operatorname{E}\left[\frac{d^2}{d\theta^2} \ell(\theta)\right].
+\]</span></p>
+</div>
+<p>So, it seems the Fisher information is <strong>inversely</strong> proportional to the <em>curvature of the (log)-likelihood function</em>.</p>
+<blockquote>
+<p>🧠 INTUITION: Large curvature =&gt; Harder to find the optimum =&gt; Less information about the parameter =&gt; More uncertainty!</p>
+</blockquote>
+<p>Extension of the concepts of “curvature” to the case of <strong>random outcomes</strong>!</p>
+</section>
+<section id="example-normal-mean-fisher-information" class="slide level2">
+<h2>Example (Normal mean Fisher information)</h2>
+<p>For the normal mean example, we have <span class="math inline">\(\ell'(\mu) = \frac{1}{\sigma^2}\sum_{i=1}^n (X_i-\mu)\)</span>. Thus, <span class="math display">\[
+\begin{aligned}
+\ell''(\mu) = \frac{d^2\ell}{d\mu^2}(\mu)
+&amp;= \frac{d}{d\mu} \left[ \frac{1}{\sigma^2}\sum_{i=1}^n (X_i-\mu) \right] \\
+&amp;= \frac{1}{\sigma^2} \sum_{i=1}^n (-1) = -n/\sigma^2.
+\end{aligned}
+\]</span> Therefore, the Fisher information is <span class="math display">\[
+\mathcal I(\mu) = -\operatorname{E}\left[\ell''(\mu)\right] = \frac{n}{\sigma^2}.
+\]</span> We can improve the estimate of <span class="math inline">\(\mu\)</span> by increasing the sample size <span class="math inline">\(n\)</span>!</p>
+</section>
+<section id="large-information-n1000" class="slide level2">
+<h2>Large information (<span class="math inline">\(n=1000\)</span>)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="conclusions" class="title-slide slide level1 center">
+<h1>Conclusions</h1>
+
 </section>
 <section id="probability-vs-statistics" class="slide level2">
 <h2>Probability vs statistics</h2>
@@ -814,14 +856,6 @@ H, H, H, T, T, H, H, T, H, H
 <li>How confident am I that <span class="math inline">\(\theta \in (\theta_l,\theta_u)\)</span>?</li>
 </ul>
 </div></div>
-</section>
-<section id="fisher-information" class="slide level2">
-<h2>Fisher information</h2>
-<p>Second derivative = Fisher Information (intuition)</p>
-<ul>
-<li>Negative expected second derivative of log-likelihood</li>
-<li>Measures how peaked the likelihood is → how much information data carries about the parameter</li>
-</ul>
 <!-- ## Example (ANOVA) -->
 <!-- House price vs district in brunei -->
 <!-- ## Example (Wealth data & Pareto distribution) -->
@@ -834,7 +868,7 @@ H, H, H, T, T, H, H, T, H, H
 <!--    •   Example: bivariate normal to standard normal → Cholesky or whitening -->
 <!-- Application: Why this matters in simulations and Bayesian inference (brief mention of Metropolis-Hastings, normalizing flows, etc.) -->
 </section>
-<section id="conclusions" class="slide level2">
+<section id="conclusions-1" class="slide level2">
 <h2>Conclusions</h2>
 <ul>
 <li>Calculus is not just background math—it’s the <strong>engine</strong> of statistical theory.</li>

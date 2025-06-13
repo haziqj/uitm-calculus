@@ -913,24 +913,294 @@ tibble(xx = seq(170, 370, length.out = 200)) |>
 
 
 
-## Combining hypothetical likelihoods
+## Averaging (hypothetical) likelihoods
 
-```{r}
+
+```{r fishersamples}
+#| out-width: 100%
+#| fig-height: 4
+#| fig-width: 7
+set.seed(123)
+n1 <- 5
+n2 <- 500
+nratio <- sqrt(n2 / n1)
+m <- 100
 B <- 100
-X <- rbinom(B, size = 10, prob = 0.7)
-xx <- seq(0.5, 0.9, length.out = 100)
-tibble(
-  b = seq_len(B),
-  X = X,
-  x = list(xx)
-) |>
-  mutate(L = map(X, \(x) dbinom(x, size = 10, prob = xx))) |>
-  unnest(x, L) |>
-  ggplot(aes(x, L, group = b)) +
-  geom_line(alpha = 0.1) +
-  theme_minimal()
+mu <- c(seq(5.8, 10.2, length = m - 1), 8)
+res <- matrix(NA, nrow = m, ncol = B) 
+score_vec1 <- score_vec2 <- mean_vec2 <- mean_vec1 <- rep(NA, B)
+
+# Small FI
+for (j in 1:B) {
+  X <- rnorm(n1, mean = 8, sd = 1)
+  ll <- rep(NA, length(mu))
+  for (i in seq_along(ll)) 
+    ll[i] <- sum(dnorm(X, mean = mu[i], sd = 1, log = TRUE)) 
+  res[, j] <- ll
+  mean_vec1[j] <- mean(X)
+  score_vec1[j] <- sum(X - 8)
+}
+colnames(res) <- 1:B
+res1 <-
+  as_tibble(nratio * res) %>%
+  mutate(mu = mu,
+         mean = apply(nratio * res, 1, mean),
+         n = n1) 
+
+# Big FI
+for (j in 1:B) {
+  X <- rnorm(n2, mean = 8, sd = 1)
+  ll <- rep(NA, length(mu))
+  for (i in seq_along(ll)) 
+    ll[i] <- sum(dnorm(X, mean = mu[i], sd = 1, log = TRUE)) 
+  res[, j] <- ll
+  mean_vec2[j] <- mean(X)
+  score_vec2[j] <- sum(X - 8)
+}
+colnames(res) <- 1:B
+res2 <-
+  as_tibble(res) %>%
+  mutate(mu = mu,
+         mean = apply(res, 1, mean),
+         n = n2) 
+
+res <- bind_rows(res1, res2) %>%
+  pivot_longer(`1`:`B`)
+
+tmp <- res %>% filter(mu == 8) %>% summarise(mean = unique(mean)) %>% unlist()
+diff <- max(tmp) - min(tmp)
+
+res <-
+  res %>%
+  mutate(
+    value = case_when(
+      n == n2 ~ value + diff,
+      TRUE ~ value 
+    ),
+    mean = case_when(
+      n == n2 ~ mean + diff,
+      TRUE ~ mean
+    ),
+    n = factor(n, labels = c("Low information", "High information"))
+  )
+
+ymax <- max(res$value) + 0.25 * abs(max(res$value))
+ymin <- min(res$value)
+
+r1 <- 5 * sd(mean_vec1)
+r2 <- 8 * sd(mean_vec2)
+
+circle <- tibble(
+  n = factor(1:2, labels = c("Low information", "High information")),  
+  xc = c(8, 8),
+  a = c(r1, r2),
+  b = 500 * c(1, 1 * r2 / r1),
+  yc = tmp[1] - b,
+  phi = c(0, 0)
+) %>% 
+  expand_grid(t = seq(0, 2 * pi, length = 100)) %>%
+  mutate(x = xc + a * cos(t) * cos(phi) - b * sin(t) * sin(phi),
+         y = yc + a * cos(t) * sin(phi) + b * sin(t) * cos(phi))
+
+circle_text <- 
+  filter(circle, t > 0.39 & t < 0.45) %>%
+  mutate(a2 = xc + a, label = c("r == 1 / kappa", NA))
+
+my_cols <- c("red3", "#7eb0d5") %>% rev()
+
+pretty_labels <- seq(100, 500, by = 100)
+pretty_positions <- (pretty_labels - 72) / 100 + 6
+
+res |>
+  filter(n == "Low information") |>
+  ggplot(aes(mu, value)) +
+  geom_line(aes(group = name), col = "gray30", alpha = 0.1) +
+  geom_path(data = filter(circle, n == "Low information"), aes(x, y), col = "red3") +
+  geom_segment(data = filter(circle_text, n == "Low information"), aes(xc, yc, xend = x, yend = y), col = "red3") +
+  geom_text(data = filter(circle_text, n == "Low information"), aes((xc + x) / 2 + 0.5, (yc + y) / 2 - 20, label = label), 
+            parse = TRUE, col = "red3") +
+  geom_line(data = filter(res, n == "Low information") %>% group_by(mu, n) %>% summarise(mean = mean(mean)),
+            aes(y = mean), col = "black", size = 1.2) +  
+  geom_point(data = tibble(x = c(mean_vec1 + rnorm(B, sd = 0.08), 
+                                 mean_vec2 + rnorm(B, sd = 0.08)),
+                           y = ymax,
+                           name = rep(1:B, 2),
+                           n = factor(rep(c(1:2), each = B),
+                                      labels = c("Low information", "High information"))),
+             aes(x, y), shape = "|", col = "red3") +
+  geom_vline(xintercept = 8, linetype = "dashed") +
+  scale_x_continuous(
+    breaks = pretty_positions,
+    labels = pretty_labels
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  labs(y = "Likelihood", x = "Price (BND 100k)") +
+  coord_cartesian(ylim = c(ymin + 800, ymax), xlim = c(6, 10)) 
 ```
 
+
+## Fisher information 
+
+::: {#def-fisher-info}
+#### Fisher information
+Under certain regularity conditions, the Fisher information is defined as
+$$
+\mathcal I(\theta) = -\operatorname{E}\left[\frac{d^2}{d\theta^2} \ell(\theta)\right].
+$$
+:::
+
+So, it seems the Fisher information is **inversely** proportional to the *curvature of the (log)-likelihood function*.
+
+> 🧠 INTUITION: Large curvature => Harder to find the optimum => Less information about the parameter => More uncertainty!
+
+Extension of the concepts of "curvature" to the case of **random outcomes**!
+
+## Example (Normal mean Fisher information)
+
+For the normal mean example, we have $\ell'(\mu) = \frac{1}{\sigma^2}\sum_{i=1}^n (X_i-\mu)$. Thus,
+$$
+\begin{aligned}
+\ell''(\mu) = \frac{d^2\ell}{d\mu^2}(\mu) 
+&= \frac{d}{d\mu} \left[ \frac{1}{\sigma^2}\sum_{i=1}^n (X_i-\mu) \right] \\
+&= \frac{1}{\sigma^2} \sum_{i=1}^n (-1) = -n/\sigma^2.
+\end{aligned}
+$$
+Therefore, the Fisher information is
+$$
+\mathcal I(\mu) = -\operatorname{E}\left[\ell''(\mu)\right] = \frac{n}{\sigma^2}.
+$$
+We can improve the estimate of $\mu$ by increasing the sample size $n$!
+
+## Large information ($n=1000$)
+
+```{r}
+#| out-width: 100%
+#| fig-height: 4
+#| fig-width: 7
+set.seed(123)
+n1 <- 5
+n2 <- 500
+nratio <- sqrt(n2 / n1)
+m <- 100
+B <- 100
+mu <- c(seq(5.8, 10.2, length = m - 1), 8)
+res <- matrix(NA, nrow = m, ncol = B) 
+score_vec1 <- score_vec2 <- mean_vec2 <- mean_vec1 <- rep(NA, B)
+
+# Small FI
+for (j in 1:B) {
+  X <- rnorm(n1, mean = 8, sd = 1)
+  ll <- rep(NA, length(mu))
+  for (i in seq_along(ll)) 
+    ll[i] <- sum(dnorm(X, mean = mu[i], sd = 1, log = TRUE)) 
+  res[, j] <- ll
+  mean_vec1[j] <- mean(X)
+  score_vec1[j] <- sum(X - 8)
+}
+colnames(res) <- 1:B
+res1 <-
+  as_tibble(nratio * res) %>%
+  mutate(mu = mu,
+         mean = apply(nratio * res, 1, mean),
+         n = n1) 
+
+# Big FI
+for (j in 1:B) {
+  X <- rnorm(n2, mean = 8, sd = 1)
+  ll <- rep(NA, length(mu))
+  for (i in seq_along(ll)) 
+    ll[i] <- sum(dnorm(X, mean = mu[i], sd = 1, log = TRUE)) 
+  res[, j] <- ll
+  mean_vec2[j] <- mean(X)
+  score_vec2[j] <- sum(X - 8)
+}
+colnames(res) <- 1:B
+res2 <-
+  as_tibble(res) %>%
+  mutate(mu = mu,
+         mean = apply(res, 1, mean),
+         n = n2) 
+
+res <- bind_rows(res1, res2) %>%
+  pivot_longer(`1`:`B`)
+
+tmp <- res %>% filter(mu == 8) %>% summarise(mean = unique(mean)) %>% unlist()
+diff <- max(tmp) - min(tmp)
+
+res <-
+  res %>%
+  mutate(
+    value = case_when(
+      n == n2 ~ value + diff,
+      TRUE ~ value 
+    ),
+    mean = case_when(
+      n == n2 ~ mean + diff,
+      TRUE ~ mean
+    ),
+    n = factor(n, labels = c("Low information", "High information"))
+  )
+
+ymax <- max(res$value) + 0.25 * abs(max(res$value))
+ymin <- min(res$value)
+
+r1 <- 5 * sd(mean_vec1)
+r2 <- 8 * sd(mean_vec2)
+
+circle <- tibble(
+  n = factor(1:2, labels = c("Low information", "High information")),  
+  xc = c(8, 8),
+  a = c(r1, r2),
+  b = 500 * c(1, 1 * r2 / r1),
+  yc = tmp[1] - b,
+  phi = c(0, 0)
+) %>% 
+  expand_grid(t = seq(0, 2 * pi, length = 100)) %>%
+  mutate(x = xc + a * cos(t) * cos(phi) - b * sin(t) * sin(phi),
+         y = yc + a * cos(t) * sin(phi) + b * sin(t) * cos(phi))
+
+circle_text <- 
+  filter(circle, t > 0.39 & t < 0.45) %>%
+  mutate(a2 = xc + a, label = c("r == 1 / kappa", NA))
+
+my_cols <- c("red3", "#7eb0d5") %>% rev()
+
+pretty_labels <- seq(100, 500, by = 100)
+pretty_positions <- (pretty_labels - 72) / 100 + 6
+
+res |>
+  filter(n == "High information") |>
+  ggplot(aes(mu, value)) +
+  geom_line(aes(group = name), col = "gray30", alpha = 0.1) +
+  geom_path(data = filter(circle, n == "High information"), aes(x, y), col = "red3") +
+  geom_segment(data = filter(circle_text, n == "High information"), aes(xc, yc, xend = x, yend = y), col = "red3") +
+  geom_text(data = filter(circle_text, n == "High information"), aes((xc + x) / 2 + 0.5, (yc + y) / 2 - 20, label = label), 
+            parse = TRUE, col = "red3") +
+  geom_line(data = filter(res, n == "High information") %>% group_by(mu, n) %>% summarise(mean = mean(mean)),
+            aes(y = mean), col = "black", size = 1.2) +  
+  geom_point(data = tibble(x = c(mean_vec1 + rnorm(B, sd = 0.08), 
+                                 mean_vec2 + rnorm(B, sd = 0.08)),
+                           y = ymax,
+                           name = rep(1:B, 2),
+                           n = factor(rep(c(1:2), each = B),
+                                      labels = c("Low information", "High information"))),
+             aes(x, y), shape = "|", col = "red3") +
+  geom_vline(xintercept = 8, linetype = "dashed") +
+  scale_x_continuous(
+    breaks = pretty_positions,
+    labels = pretty_labels
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  labs(y = "Likelihood", x = "Price (BND 100k)") +
+  coord_cartesian(ylim = c(ymin + 800, ymax), xlim = c(6, 10)) 
+```
+
+
+# Conclusions
 
 ## Probability vs statistics
 
@@ -1001,13 +1271,6 @@ Statistics on the other hand, allows us to *learn* from data.
 
 
 
-
-## Fisher information 
-
-Second derivative = Fisher Information (intuition)
-
-- Negative expected second derivative of log-likelihood
-- Measures how peaked the likelihood is → how much information data carries about the parameter
 
 
 <!-- ## Example (ANOVA) -->
