@@ -457,7 +457,7 @@ $$
   
 - Curvature tells us how steep the curve is at its optima. In some sense, it tells us how hard or easy it is to find the optimum.
 
-# A statistical persepctive
+# A statistical persepctive {.transition-slide-ubdrubydeep}
 
 ## But what *is* statistics?
 
@@ -1199,7 +1199,7 @@ res |>
   coord_cartesian(ylim = c(ymin + 800, ymax), xlim = c(6, 10)) 
 ```
 
-# Another example
+# Another example {.transition-slide-ubdrubydeep}
 
 ## Exponential waiting time
 
@@ -1257,9 +1257,21 @@ To obtain the Fisher information, just differentiate $\ell'(\lambda)$ once more,
 Verify that it is $\mathcal I(\lambda) = n/\lambda^2$.
 :::
 
+## Data example
+
 ## Plot
 
-# Conclusions
+# Conclusions {.transition-slide-ubdrubydeep}
+
+## Summary
+
+- Learn from data
+- Involves calculus!
+- Calculus is not just background math—it’s the **engine** of statistical theory.
+- Beyond undergraduate stats: everything from MLE, Bayesian posteriors, to machine learning involves gradients and Hessians.
+ Suggest: for students who love math but unsure about statistics—you are the kind of person statistics needs.
+
+
 
 ## Probability vs statistics
 
@@ -1328,30 +1340,9 @@ Statistics on the other hand, allows us to *learn* from data.
 
 :::
 
+## Where to go from here
 
+- Numerical derivatives and specialised software
+- Bimodal distributions (not easy)
+- Interesting challenges in modern statistics include big data, high-dimensional data, and complex models.
 
-
-
-<!-- ## Example (ANOVA) -->
-
-<!-- House price vs district in brunei -->
-
-
-<!-- ## Example (Wealth data & Pareto distribution) -->
-
-<!-- ## Jacobians and change of variables  -->
-
-<!-- Show why Jacobians matter when transforming distributions. -->
-<!-- 	•	Simple change of variable in one dimension -->
-<!-- 	•	If $Y = g(X)$, then $f_Y(y) = f_X(x) \left| \frac{dx}{dy} \right|$ -->
-<!-- 	•	Multivariate case: use Jacobian determinant -->
-<!-- 	•	Example: transforming from Cartesian to polar coordinates -->
-<!-- 	•	Example: bivariate normal to standard normal → Cholesky or whitening -->
-
-<!-- Application: Why this matters in simulations and Bayesian inference (brief mention of Metropolis-Hastings, normalizing flows, etc.) -->
-
-## Conclusions
-
-- Calculus is not just background math—it’s the **engine** of statistical theory.
-- Beyond undergraduate stats: everything from MLE, Bayesian posteriors, to machine learning involves gradients and Hessians.
- Suggest: for students who love math but unsure about statistics—you are the kind of person statistics needs.
