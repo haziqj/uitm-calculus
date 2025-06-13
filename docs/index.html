@@ -638,12 +638,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>257 52 216 215 162 92 159 120 170 199 190 ...</code></pre>
+<pre><code>396 402 273 177 255 379 329 323 338 323 235 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 267.5\)</span></p>
+<p><span class="math inline">\(\bar X = 288.4\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -660,12 +660,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>371 326 214 78 226 380 264 287 432 259 324 ...</code></pre>
+<pre><code>255 217 339 134 260 275 75 376 448 331 105 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 294.3\)</span></p>
+<p><span class="math inline">\(\bar X = 271.5\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -682,12 +682,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>437 374 370 130 286 226 298 224 278 399 249 ...</code></pre>
+<pre><code>302 362 290 343 249 369 278 195 272 399 231 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 281.9\)</span></p>
+<p><span class="math inline">\(\bar X = 277.5\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -704,12 +704,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>148 275 432 144 273 316 207 222 326 204 245 ...</code></pre>
+<pre><code>265 196 211 171 303 319 377 200 336 259 337 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 273.3\)</span></p>
+<p><span class="math inline">\(\bar X = 268.2\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -726,12 +726,12 @@ H, H, H, T, T, H, H, T, H, H
 <div class="nudge-down">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>293 351 235 162 210 304 257 282 281 81 252 ...</code></pre>
+<pre><code>333 402 381 331 423 339 331 260 291 224 184 ...</code></pre>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:20%;">
-<p><span class="math inline">\(\bar X = 244.5\)</span></p>
+<p><span class="math inline">\(\bar X = 286.2\)</span></p>
 </div><div class="column" style="width:50%;">
 <div class="cell">
 <div class="cell-output-display">
@@ -816,6 +816,66 @@ H, H, H, T, T, H, H, T, H, H
 </div>
 </div>
 </div>
+</section></section>
+<section>
+<section id="another-example" class="title-slide slide level1 center">
+<h1>Another example</h1>
+
+</section>
+<section id="exponential-waiting-time" class="slide level2">
+<h2>Exponential waiting time</h2>
+<div id="exm-exponential" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3 (Estimating failure rate of a machine component)</strong></span> Suppose we collect data on how long (in hours) a machine component lasts before it fails. This could be a valve in a chemical plant, a sensor in a civil engineering structure, or a server part in a data centre.</p>
+</div>
+<div class="fragment fade-out" data-fragment-index="1">
+<p><img data-src="figures/cogs.gif" class="absolute" style="left: 300px; width: 40%; "></p>
+</div>
+<div class="fragment fade-in" data-fragment-index="1">
+<div class="nudge-up-medium">
+<p>Assume that failure times <span class="math inline">\(X\)</span> follow an exponential distribution: <span class="math display">\[
+f(x \mid \lambda) = \lambda e^{-\lambda x}, \quad x &gt; 0
+\]</span> where <span class="math inline">\(\lambda\)</span> is the failure <strong>rate</strong>. Using observed failure times from a sample of machines, we can estimate <span class="math inline">\(\lambda\)</span> via <strong>Maximum Likelihood Estimation (MLE)</strong>.</p>
+<p>Engineers and analysts can predict average lifetime (<span class="math inline">\(1/\lambda\)</span>), schedule maintenance, and make design decisions to improve reliability.</p>
+</div>
+</div>
+</section>
+<section id="exponential-waiting-time-cont." class="slide level2">
+<h2>Exponential waiting time (cont.)</h2>
+<p>Let <span class="math inline">\(X_1,\dots,X_n\)</span> be the observed failure times. The log-likelihood function is given by <span class="math display">\[
+\begin{aligned}
+\ell(\lambda)
+= \log \left[ \prod_{i=1}^n f(X_i \mid \lambda) \right]
+&amp;= \sum_{i=1}^n \log f(X_i \mid \lambda) \\
+&amp;= \sum_{i=1}^n \log \left( \lambda e^{-\lambda X_i} \right) \\
+&amp;= n \log \lambda - \lambda \sum_{i=1}^n X_i.
+\end{aligned}
+\]</span></p>
+</section>
+<section id="exponential-waiting-time-cont.-1" class="slide level2">
+<h2>Exponential waiting time (cont.)</h2>
+<p>To find the MLE of <span class="math inline">\(\lambda\)</span>, we differentiate the log-likelihood function with respect to <span class="math inline">\(\lambda\)</span> and set it to zero: <span class="math display">\[
+\begin{aligned}
+\frac{d}{d\lambda} \ell(\lambda)
+&amp;= \frac{n}{\lambda} - \sum_{i=1}^n X_i = 0 \\
+\Leftrightarrow \lambda &amp;= \frac{n}{\sum_{i=1}^n X_i} = \frac{1}{\bar X}.
+\end{aligned}
+\]</span></p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>To obtain the Fisher information, just differentiate <span class="math inline">\(\ell'(\lambda)\)</span> once more, and take negative expectations. Verify that it is <span class="math inline">\(\mathcal I(\lambda) = n/\lambda^2\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="plot" class="slide level2">
+<h2>Plot</h2>
 </section></section>
 <section>
 <section id="conclusions" class="title-slide slide level1 center">

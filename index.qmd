@@ -1199,6 +1199,65 @@ res |>
   coord_cartesian(ylim = c(ymin + 800, ymax), xlim = c(6, 10)) 
 ```
 
+# Another example
+
+## Exponential waiting time
+
+::: {#exm-exponential }
+
+#### Estimating failure rate of a machine component
+
+Suppose we collect data on how long (in hours) a machine component lasts before it fails. This could be a valve in a chemical plant, a sensor in a civil engineering structure, or a server part in a data centre.
+:::
+
+::: {.fragment fragment-index=1 .fade-out}
+![](figures/cogs.gif){.absolute left=300 width="40%"}
+:::
+
+::: {.fragment fragment-index=1 .fade-in}
+::: {.nudge-up-medium}
+Assume that failure times $X$ follow an exponential distribution:
+$$
+f(x \mid \lambda) = \lambda e^{-\lambda x}, \quad x > 0
+$$
+where $\lambda$ is the failure **rate**. Using observed failure times from a sample of machines, we can estimate $\lambda$ via **Maximum Likelihood Estimation (MLE)**.
+
+Engineers and analysts can predict average lifetime ($1/\lambda$), schedule maintenance, and make design decisions to improve reliability.
+:::
+:::
+
+## Exponential waiting time (cont.)
+
+Let $X_1,\dots,X_n$ be the observed failure times.
+The log-likelihood function is given by
+$$
+\begin{aligned}
+\ell(\lambda) 
+= \log \left[ \prod_{i=1}^n f(X_i \mid \lambda) \right]
+&= \sum_{i=1}^n \log f(X_i \mid \lambda) \\
+&= \sum_{i=1}^n \log \left( \lambda e^{-\lambda X_i} \right) \\
+&= n \log \lambda - \lambda \sum_{i=1}^n X_i.
+\end{aligned}
+$$
+
+## Exponential waiting time (cont.)
+
+
+To find the MLE of $\lambda$, we differentiate the log-likelihood function with respect to $\lambda$ and set it to zero:
+$$
+\begin{aligned}
+\frac{d}{d\lambda} \ell(\lambda)
+&= \frac{n}{\lambda} - \sum_{i=1}^n X_i = 0 \\
+\Leftrightarrow \lambda &= \frac{n}{\sum_{i=1}^n X_i} = \frac{1}{\bar X}.
+\end{aligned}
+$$
+
+::: {.callout-tip}
+To obtain the Fisher information, just differentiate $\ell'(\lambda)$ once more, and take negative expectations.
+Verify that it is $\mathcal I(\lambda) = n/\lambda^2$.
+:::
+
+## Plot
 
 # Conclusions
 
