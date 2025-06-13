@@ -1259,7 +1259,86 @@ Verify that it is $\mathcal I(\lambda) = n/\lambda^2$.
 
 ## Data example
 
-## Plot
+Suppose $n=50$ machines were observed, and the failure times (in hours) recorded:
+
+```{r}
+set.seed(136)
+x <- rexp(50, rate = 1 / 300)
+
+formatted <- formatC(round(x, 1), format = "f", digits = 1, width = 6)
+mat <- matrix(formatted, nrow = 5, byrow = TRUE)
+invisible(apply(mat, 1, function(row) cat(paste(row, collapse = " "), "\n")))
+```
+
+Since the MLE of $\lambda$ is $\hat\lambda = 1/\bar X$, we can compute it as follows:
+$$
+\hat\lambda = \frac{1}{\bar X} = \frac{1}{`r iprior::dec_plac(mean(x), 1)`} \approx `r scales::scientific(1 / mean(x))`.
+$$
+In other words, approximately one failure every `r round(mean(x))` hours.
+
+## Plot of data and exponential fit
+
+```{=html}
+<div id="desmos-failure" style="position: relative; width: 100%; height:88%;"></div>
+
+<script>
+  var elt = document.getElementById("desmos-failure");
+  var calculator = Desmos.GraphingCalculator(elt, {
+    expressions: true,
+    settingsMenu: false,
+    zoomButtons: true
+  });
+
+  const data = [
+    680.62, 416.51, 823.75, 20.37, 744.01, 553.79, 154.83, 550.31, 116.22, 403.03,
+    27.08, 175.62, 589.77, 634.45, 81.44, 37.15, 424.29, 60.09, 76.06, 138.36,
+    126.04, 16.06, 390.87, 187.40, 540.41, 369.30, 320.58, 14.52, 791.19, 436.69,
+    380.14, 767.88, 202.87, 182.32, 62.08, 21.22, 115.61, 284.69, 193.08, 79.84,
+    0.36, 503.10, 148.72, 407.79, 76.35, 815.07, 191.84, 70.73, 11.55, 384.71
+  ];
+
+  calculator.setExpressions([
+    {
+      id: "xbar_slider",
+      latex: "m=300",
+      sliderBounds: { min: 50, max: 900, step: 2 }
+    },
+    // Set the lambda slider
+    {
+      id: "lambda_def",
+      latex: "\\lambda = \\frac{1}{m}"
+    },
+
+    // Define the exponential function
+    {
+      id: "exp_fn",
+      latex: "f(x)=\\lambda e^{-\\lambda x}",
+      color: Desmos.Colors.RED
+    },
+
+    // Input data as a list
+    {
+      id: "data_vec",
+      latex: "X=[" + data.join(",") + "]",
+      color: Desmos.Colors.BLUE
+    },
+    // Plot the histogram of the data
+    {
+      id: "hist",
+      latex: "\\histogram(X,150)",
+      color: Desmos.Colors.GREEN,
+      hidden: true
+    }
+  ]);
+
+  calculator.setMathBounds({
+    left: 0,
+    right: 900,
+    bottom: 0,
+    top: 0.005
+  });
+</script>
+```
 
 # Conclusions {.transition-slide-ubdrubydeep}
 
