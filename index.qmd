@@ -146,7 +146,7 @@ $$
 </script>
 ```
 
-## But *is* a derivative?
+## But what *is* a derivative?
 
 The derivative of a function tells you:    
 
@@ -203,6 +203,9 @@ Find the maximum of $f(x) = -3x^4 + 4x^3 + 12x^2$.
 
 . . . 
 
+::: {.columns}
+
+::: {.column width=70%}
 $$
 \begin{align*}
 f'(x) = -12x^3 + 12x^2 + 24x &= 0 \\
@@ -211,11 +214,14 @@ f'(x) = -12x^3 + 12x^2 + 24x &= 0 \\
 \Leftrightarrow x &= 0, -1, 2.
 \end{align*}
 $$
+:::
 
-. . . 
-
-::: {.nudge-up-medium}
+::: {.column width=30%}
+::: {.fragment}
 Are all of these critical values maxima values? 🤔
+:::
+:::
+
 :::
 
 ## Graphically...
@@ -278,7 +284,7 @@ ggplot(df, aes(x, y)) +
 
 ## How do we know if it's a maxima or minima?
 
-[**Second derivative test:**]{.ubdrubydeep} Measure the **change in slope** around the critical point $\hat x$, i.e. $f''(\hat x) = \frac{d}{dx}\left( \frac{df}{dx}(x) \right) = \frac{d^2f}{dx^2}(x)$.
+[**Second derivative test:**]{.ubdrubydeep} Measure the **change in slope** around a point $x$, i.e. $f''(\hat x) = \frac{d}{dx}\left( \frac{df}{dx}(x) \right) = \frac{d^2f}{dx^2}(x)$.
 
 . . . 
 
@@ -310,14 +316,14 @@ Plug in the critical points:
 - $x=2$: $f''(2) = -144 + 48 + 24 = -72 < 0$, hence local maximum.
 
 ::: {.callout-tip}
-Often it is not enough to just differentiate once to find optima. You may need to differentiate twice to classify the critical points.
+Often it is not enough to just differentiate once to find optima. Differentiate twice to classify critical points.
 :::
 
 :::
 
 ## Curvature
 
-Let $\mathcal C_x$ denote the *osculating circle* at $x$ with centre $c$ and radius $r$, i.e. the circle that best approximates the graph of $f$ at $x$.
+Let $\mathcal C_x$ denote the *osculating circle* at $x$ with centre $c$ and radius $r$, i.e. the circle that **best approximates the graph of $f$ at $x$**.
 Historically, the curvature $\kappa$ for a graph of a function $f$ at a point $x$ is measured as $\kappa = \frac{1}{r}$.
 
 ```{r}
@@ -469,7 +475,7 @@ $$
   
 - Curvature tells us how steep the curve is at its optima. In some sense, it tells us how hard or easy it is to find the optimum.
 
-# A statistical persepctive {.transition-slide-ubdrubydeep}
+# A statistical perspective {.transition-slide-ubdrubydeep}
 
 ## But what *is* statistics?
 
@@ -543,6 +549,7 @@ If we do not know $p$, then it is not possible to calculate probabilities, expec
 
 . . .
 
+::: {.nudge-up-small}
 Naturally, you go ahead and collect data by tossing it $n=10$ times. The outcome happens to be
 $$
 H, H, H, T, T, H, H, T, H, H
@@ -550,16 +557,17 @@ $$
 There is a total of $X=7$ heads, and from this you surmise that (at least) the coin is *unlikely* to be fair, because:
 
 ::: {.nudge-down-small}
-
+::: {.incremental}
 - If $p=0.5$, then $\Pr(X=7 \mid p = 0.7) = \binom{10}{7} (0.5)^7 (0.5)^3 = 0.117$.
 - If $p=0.7$, then $\Pr(X=7 \mid p = 0.5) = \binom{10}{7} (0.7)^7 (0.3)^3 = 0.267$.
 - If $p=0.9$, then $\Pr(X=7 \mid p = 0.9) = \binom{10}{7} (0.9)^7 (0.1)^3 = 0.057$.
-
 :::
-
+:::
 
 ::: {.nudge-up-medium}
 How to formalise this idea?
+:::
+
 :::
 
 ## The likelihood function
@@ -569,10 +577,16 @@ Given a probability function $x \mapsto f(x\mid\theta)$ where $x$ is a realisati
 $\mathcal L(\theta) = f(x \mid \theta)$.
 :::
 
+. . .
+
+
+::: {.columns}
+
+::: {.column width=70%}
 ```{r}
 #| out-width: 100%
-#| fig-height: 3
-#| fig-width: 7
+#| fig-height: 2.9
+#| fig-width: 5
 
 plot_binom_lik <- function(nheads) {
   
@@ -589,6 +603,16 @@ plot_binom_lik(7) +
   labs(x = "Probability of heads, p", y = "L(p|x)",
        subtitle = "Likelihood of Bin(10,p) given fixed data X=7") 
 ```
+:::
+
+::: {.column width=30%}
+::: {.fragment}
+<br>
+The value $\hat \theta$ which maximises $\mathcal L(\theta)$ is called the [**maximum likelihood estimator**]{.ubdrubydeep} (MLE) of $\theta$.
+:::
+:::
+
+:::
 
 
 ## Parameteric statistical models
@@ -606,6 +630,9 @@ Here, functional form of $f$ is known, but the parameter $\theta$ is unknown. Ex
 |   |   |   |
 : {.table-ubd}
 
+::: aside
+⚠️  Everything we need to know about the distribution is captured by the parameter $\theta$.
+::: 
 
 ## Example (Normal mean)
 
@@ -1316,6 +1343,9 @@ $$
 
 
 To find the MLE of $\lambda$, we differentiate the log-likelihood function with respect to $\lambda$ and set it to zero:
+
+. . .
+
 $$
 \begin{aligned}
 \frac{d}{d\lambda} \ell(\lambda)
@@ -1323,6 +1353,8 @@ $$
 \Leftrightarrow \lambda &= \frac{n}{\sum_{i=1}^n X_i} = \frac{1}{\bar X}.
 \end{aligned}
 $$
+
+. . .
 
 ::: {.callout-tip}
 To obtain the Fisher information, just differentiate $\ell'(\lambda)$ once more, and take negative expectations.
@@ -1339,8 +1371,11 @@ x <- rexp(50, rate = 1 / 300)
 
 formatted <- formatC(round(x, 1), format = "f", digits = 1, width = 6)
 mat <- matrix(formatted, nrow = 5, byrow = TRUE)
+mat <- cbind(rep("      ", 5), mat)
 invisible(apply(mat, 1, function(row) cat(paste(row, collapse = " "), "\n")))
 ```
+
+. . .
 
 Since the MLE of $\lambda$ is $\hat\lambda = 1/\bar X$, we can compute it as follows:
 $$
@@ -1427,16 +1462,18 @@ Statistics on the other hand, allows us to *learn* from data.
 
 ```{tikz}
 \usetikzlibrary{fit,positioning,shapes.geometric,decorations.pathreplacing,calc}
+\definecolor{ubdrubydeep}{HTML}{b71757}
+\definecolor{ubdblue}{HTML}{325494}
 \begin{tikzpicture}[scale=0.8, transform shape]
 \tikzstyle{obsvar}=[rectangle, thick, minimum size = 10mm,draw =black!80, node distance = 1mm]
 \tikzstyle{connect}=[-latex, thick]
 
-\node[obsvar] (fx) [] {$\hspace{1em}f(x|\theta)\hspace{1em}$};
-\node (xx) [right=of fx] {\textcolor{blue}{$\{X_1,\dots,X_n\}$}};
-\node (theta) [left=of fx] {\textcolor{red}{$\theta$}};
+\node[obsvar] (fx) [] {$\hspace{1em}f(x\mid\theta)\hspace{1em}$};
+\node (xx) [right=of fx] {\textcolor{ubdblue}{$\{X_1,\dots,X_n\}$}};
+\node (theta) [left=of fx] {\textcolor{ubdrubydeep}{$\theta$}};
 \node (d1) [below=of fx,yshift=9mm] {Model};
-\node (d2) [below=of xx,yshift=11mm] {\scriptsize \textcolor{blue}{prob.}};
-\node (d3) [below=of theta,yshift=11mm] {\scriptsize \textcolor{red}{param.}};
+\node (d2) [below=of xx,yshift=11mm] {\scriptsize \textcolor{ubdblue}{prob.}};
+\node (d3) [below=of theta,yshift=11mm] {\scriptsize \textcolor{ubdrubydeep}{param.}};
 \node (d1) [above=of fx,yshift=-5mm] {\underline{Probability}};
 
 \path (fx) edge [connect] (xx)
@@ -1453,15 +1490,17 @@ Statistics on the other hand, allows us to *learn* from data.
 
 ```{tikz}
 \usetikzlibrary{fit,positioning,shapes.geometric,decorations.pathreplacing,calc}
+\definecolor{ubdrubydeep}{HTML}{b71757}
+\definecolor{ubdblue}{HTML}{325494}
 \begin{tikzpicture}[scale=0.8, transform shape]
 \tikzstyle{obsvar}=[rectangle, thick, minimum size = 10mm,draw =black!80, node distance = 1mm]
 \tikzstyle{connect}=[-latex, thick]
-\node[obsvar] (fx) [] {$\hspace{1em}f(x|\theta)\hspace{1em}$};
-\node (xx) [right=of fx] {\textcolor{red}{$\{x_1,\dots,x_n\}$}};
-\node (theta) [left=of fx] {\textcolor{blue}{$\hat\theta$}};
+\node[obsvar] (fx) [] {$\hspace{1em}f(x\mid\theta)\hspace{1em}$};
+\node (xx) [right=of fx] {\textcolor{ubdrubydeep}{$\{x_1,\dots,x_n\}$}};
+\node (theta) [left=of fx] {\textcolor{ubdblue}{$\hat\theta$}};
 \node (d1) [below=of fx,yshift=9mm] {Model};
-\node (d2) [below=of xx,yshift=11mm] {\scriptsize \textcolor{red}{data}};
-\node (d3) [below=of theta,yshift=11mm] {\scriptsize \textcolor{blue}{est.}};
+\node (d2) [below=of xx,yshift=11mm] {\scriptsize \textcolor{ubdrubydeep}{data}};
+\node (d3) [below=of theta,yshift=11mm] {\scriptsize \textcolor{ubdblue}{est.}};
 \node (d1) [above=of fx,yshift=-5mm] {\underline{Statistics}};
 
 \path (fx) edge [connect] (theta)
@@ -1477,11 +1516,11 @@ Statistics on the other hand, allows us to *learn* from data.
 
 . . .
 
-- Calculus plays a central role:
+- Parameter estimation is a **central** task in statistics.
   - Finding the **Maximum Likelihood Estimator (MLE)**
   - Understanding **Fisher Information** and curvature
   - Uncovering role of sample size in estimation uncertainty
-- Calculus is not just background math—it’s the **engine** driving statistical theory.
+- Calculus is not just background maths—it’s the **engine** driving statistical theory.
 
 ## Where to go from here
 
@@ -1496,30 +1535,29 @@ fun <- function(x) x ^ 2
 numDeriv::grad(fun, x = 2)
 ```
 
+::: {.fragment fragment-index=2}
 ::: {.nudge-down-small}
 🚀 Modern statistics tackles:
-
 
 - **Big data** (too much)
 - **High-dimensional data** (too many variables)
 - **Complex models** (real-world messiness)
 :::
-
+:::
 
 :::
 
 ::: {.column width=50%}
+::: {.fragment fragment-index=1}
 🧠 **Bimodal and non-standard distributions**  when simple models break
-
-
-
+:::
+:::
 :::
 
-:::
-
-::: {.absolute right=-300 bottom=50}
+::: {.fragment fragment-index=1}
+::: {.absolute right=-310 bottom=40}
 ```{r mleunique}
-#| out-width: 70%
+#| out-width: 68%
 #| fig-height: 3
 #| fig-width: 5
 x <- seq(-5, 8, length = 100)
@@ -1539,6 +1577,7 @@ ggplot(data.frame(x = x, y = fx2), aes(x, y)) +
   theme(axis.ticks = element_blank(), axis.text = element_blank()) -> p2
 cowplot::plot_grid(p1, p2)
 ```
+:::
 :::
 
 # Thanks! {.transition-slide-ubdrubydeep}
